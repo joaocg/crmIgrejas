@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-bookworm
+FROM php:8.4-fpm-bookworm
 
 ARG WWWGROUP=1000
 
@@ -16,7 +16,6 @@ RUN apt-get update \
         libpng-dev \
         libjpeg62-turbo-dev \
         libfreetype6-dev \
-        libmemcached-dev \
         zlib1g-dev \
         pkg-config \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -29,8 +28,8 @@ RUN apt-get update \
         pdo_mysql \
         sockets \
         zip \
-    && pecl install redis memcached \
-    && docker-php-ext-enable redis memcached \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
