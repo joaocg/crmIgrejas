@@ -17,12 +17,17 @@
 - Modify: `.env.example`
 - Create: `docker/queue/entrypoint.sh`
 - Create: `docker/scheduler/entrypoint.sh`
+- Modify: `config/queue.php`
+- Modify: `config/cache.php`
 
 - [ ] **Step 1: Write service health checks**
 
 ```yaml
 healthcheck:
   test: ["CMD", "redis-cli", "ping"]
+  interval: 10s
+  timeout: 3s
+  retries: 5
 ```
 
 - [ ] **Step 2: Wire queue and scheduler containers**
@@ -63,6 +68,11 @@ public function test_cache_uses_redis_by_default(): void
 {
     $this->assertSame('redis', config('cache.default'));
 }
+
+public function test_memcached_store_is_available_for_hot_reads(): void
+{
+    $this->assertArrayHasKey('memcached', config('cache.stores'));
+}
 ```
 
 - [ ] **Step 2: Set the drivers**
@@ -70,6 +80,7 @@ public function test_cache_uses_redis_by_default(): void
 ```php
 'default' => env('CACHE_STORE', 'redis'),
 'driver' => env('SESSION_DRIVER', 'redis'),
+// Keep Memcached configured as a secondary store for fast, ephemeral lookups.
 ```
 
 - [ ] **Step 3: Verify the app survives restarts without losing local config**
@@ -94,6 +105,7 @@ git commit -m "feat: configure cache and session drivers"
 - Modify: `config/telescope.php`
 - Modify: `routes/web.php`
 - Modify: `app/Http/Middleware/EnsureFrontendRequestsAreStateful.php` if needed
+- Modify: `config/app.php`
 
 - [ ] **Step 1: Write access-control tests**
 
@@ -124,4 +136,3 @@ docker compose exec app php artisan telescope:status
 git add app/Providers/TelescopeServiceProvider.php config/telescope.php routes/web.php
 git commit -m "feat: secure telescope for local development"
 ```
-

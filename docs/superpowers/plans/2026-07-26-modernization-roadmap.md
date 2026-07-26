@@ -8,6 +8,8 @@
 
 **Tech Stack:** Laravel 12, PHP 8.3, Docker Compose, MySQL 8.4, Redis, Memcached, Sanctum, Telescope, Vue 3, PrimeVue 4, Pinia, Vue Router, Vite, i18n.
 
+**Current system findings:** The legacy app is a Slim 4 + Propel monolith with server-rendered pages, very wide tables, and mixed session/bootstrap concerns. The key legacy entry points are `src/index.php`, `src/api/index.php`, and `src/EcclesiaCRM/Bootstrapper.php`. The most important source schema files are `propel/main.schema.xml` and `src/mysql/install/Install.sql`. The observed pain points are asset loading fragility, lock-screen/session churn, language mismatch for admin users, and domain logic spread across unrelated tables.
+
 ---
 
 ### Task 1: Lock the execution sequence and repo boundaries
@@ -60,7 +62,7 @@ Legacy app: Slim 4 + Propel + server-rendered PHP
 Primary entrypoints: src/index.php, src/api/index.php
 Bootstrap/session flow: src/EcclesiaCRM/Bootstrapper.php
 Schema sources: propel/main.schema.xml and src/mysql/install/Install.sql
-Key pain points: wide tables, coupled session handling, server-rendered pages, mixed domain concerns
+Key pain points: wide tables, coupled session handling, server-rendered pages, mixed domain concerns, lock-loop behavior, locale mismatch, and asset pipeline fragility
 ```
 
 - [ ] **Step 2: Record the target constraints**
@@ -79,4 +81,3 @@ Infra: Docker Compose with mysql, redis, memcached, queue worker, scheduler, Tel
 git add docs/superpowers/plans/2026-07-26-modernization-roadmap.md
 git commit -m "docs: expand crmIgrejas migration scope"
 ```
-

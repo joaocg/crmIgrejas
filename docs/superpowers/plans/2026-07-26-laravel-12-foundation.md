@@ -100,6 +100,8 @@ git commit -m "feat: add dockerized Laravel 12 foundation"
 - Modify: `.env.example`
 - Modify: `bootstrap/app.php`
 - Modify: `routes/web.php`
+- Create: `app/Http/Middleware/SetLocaleFromUserPreference.php`
+- Create: `app/Support/Locale/LocaleContext.php`
 
 - [ ] **Step 1: Write the config assertions**
 
@@ -120,17 +122,36 @@ public function test_app_defaults_are_pt_br_ready(): void
 'faker_locale' => env('APP_FAKER_LOCALE', 'pt_BR'),
 ```
 
-- [ ] **Step 3: Re-run the config test and the smoke test**
+- [ ] **Step 3: Add locale resolution by authenticated user**
+
+```php
+public function handle(Request $request, Closure $next): Response
+{
+    $locale = app(\App\Support\Locale\LocaleContext::class)->resolve($request->user());
+
+    app()->setLocale($locale);
+
+    return $next($request);
+}
+```
+
+- [ ] **Step 4: Register the middleware in the Laravel 12 bootstrap**
+
+```php
+$middleware->appendToGroup('web', \App\Http\Middleware\SetLocaleFromUserPreference::class);
+```
+
+- [ ] **Step 5: Re-run the config test and the smoke test**
 
 ```bash
 docker compose exec app php artisan test --filter=SmokeTest -v
 ```
 
-- [ ] **Step 4: Commit the locale defaults**
+- [ ] **Step 6: Commit the locale defaults**
 
 ```bash
-git add config/app.php .env.example bootstrap/app.php routes/web.php
-git commit -m "feat: set pt_BR as the default Laravel locale"
+git add config/app.php .env.example bootstrap/app.php routes/web.php app/Http/Middleware/SetLocaleFromUserPreference.php app/Support/Locale/LocaleContext.php
+git commit -m "feat: set pt_br as the default Laravel locale"
 ```
 
 ### Task 3: Wire Sanctum, Telescope, and the base auth surface
@@ -139,6 +160,7 @@ git commit -m "feat: set pt_BR as the default Laravel locale"
 - Modify: `composer.json`
 - Modify: `bootstrap/providers.php`
 - Create: `app/Providers/TelescopeServiceProvider.php`
+- Create: `config/telescope.php`
 - Modify: `config/sanctum.php`
 - Modify: `config/auth.php`
 - Modify: `routes/api.php`
@@ -179,6 +201,6 @@ docker compose exec app php artisan test -v
 - [ ] **Step 5: Commit the auth foundation**
 
 ```bash
-git add composer.json bootstrap/providers.php app/Providers/TelescopeServiceProvider.php config/auth.php config/sanctum.php routes/api.php routes/web.php
+git add composer.json bootstrap/providers.php app/Providers/TelescopeServiceProvider.php config/telescope.php config/auth.php config/sanctum.php routes/api.php routes/web.php
 git commit -m "feat: wire sanctum and telescope"
 ```

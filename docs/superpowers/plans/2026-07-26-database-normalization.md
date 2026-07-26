@@ -28,11 +28,12 @@ src/EcclesiaCRM/model/*
 - [ ] **Step 2: Classify the core domains**
 
 ```text
-Identity: users, profiles, roles, permissions
-Church structure: churches, tenants, campuses, ministries
-People: persons, families, addresses, contacts
-Activity: groups, events, attendance
-Operations: donations, pledges, deposits, receipts
+Identity: user_usr, role tables, permissions, user preferences
+Church structure: tenant/church root, campus/location, ministry, configuration
+People: person_per, family_fam, address and household linkage tables
+Activity: group_grp, events_event, attendance and participation logs
+Operations: donations, pledges, deposits, receipts, finance exports
+Legacy hotspots: config_cfg, userconfig_ucfg, pastoral care, mail, and plugin-owned tables
 ```
 
 - [ ] **Step 3: Commit the inventory artifacts**
@@ -53,6 +54,8 @@ git commit -m "docs: inventory legacy ecclesiacrm schema"
 - Create: `database/migrations/2026_07_26_000006_create_addresses_table.php`
 - Create: `database/migrations/2026_07_26_000007_create_modules_table.php`
 - Create: `database/migrations/2026_07_26_000008_create_module_settings_table.php`
+- Create: `database/migrations/2026_07_26_000009_create_contacts_table.php`
+- Create: `database/migrations/2026_07_26_000010_create_activity_tables.php`
 - Modify: `database/seeders/DatabaseSeeder.php`
 
 - [ ] **Step 1: Write schema tests for key foreign keys**
@@ -61,6 +64,11 @@ git commit -m "docs: inventory legacy ecclesiacrm schema"
 public function test_persons_belong_to_families_and_tenants(): void
 {
     $this->assertTrue(Schema::hasColumns('persons', ['tenant_id', 'family_id']));
+}
+
+public function test_users_have_locale_and_tenant_scoping(): void
+{
+    $this->assertTrue(Schema::hasColumns('users', ['tenant_id', 'locale']));
 }
 ```
 
@@ -132,4 +140,3 @@ docker compose exec app php artisan legacy:import
 git add app/Console/Commands database/seeders tests/Feature/LegacyImportTest.php
 git commit -m "feat: add legacy data import path"
 ```
-

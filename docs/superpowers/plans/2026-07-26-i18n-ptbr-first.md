@@ -4,7 +4,7 @@
 
 **Goal:** Make pt_BR the primary language of the system for the admin user while keeping English available as fallback and making the frontend translation-ready for future languages.
 
-**Architecture:** Localization is centralized in Laravel config, translated UI strings are grouped by domain, and the browser language only overrides the default after the user profile is loaded. This keeps the app predictable for church staff while still allowing tenant-specific language strategies later.
+**Architecture:** Localization is centralized in Laravel config, translated UI strings are grouped by domain, and the browser language only overrides the default after the user profile is loaded. This keeps the app predictable for church staff while still allowing tenant-specific language strategies later. The resolution order is explicit: user preference, then tenant preference, then `APP_LOCALE`, then fallback.
 
 **Tech Stack:** Laravel localization, vue-i18n, JSON translation files, user profile preference storage.
 
@@ -17,6 +17,8 @@
 - Modify: `config/app.php`
 - Modify: `app/Models/User.php`
 - Modify: `app/Providers/AppServiceProvider.php`
+- Create: `app/Support/Locale/LocaleContext.php`
+- Create: `app/Http/Middleware/SetLocaleFromUserPreference.php`
 
 - [ ] **Step 1: Write the locale regression test**
 
@@ -35,25 +37,38 @@ public function test_locale_defaults_to_pt_br(): void
 'faker_locale' => env('APP_FAKER_LOCALE', 'pt_BR'),
 ```
 
-- [ ] **Step 3: Verify the locale is applied to the admin user context**
+- [ ] **Step 3: Resolve locale from user and tenant preference**
 
 ```php
-public function boot(): void
+public function resolve(?User $user = null): string
 {
-    //
+    return $user?->locale
+        ?? $user?->tenant?->locale
+        ?? config('app.locale');
 }
 ```
 
-- [ ] **Step 4: Run the locale test in Docker**
+- [ ] **Step 4: Apply locale middleware to authenticated web requests**
+
+```php
+public function handle(Request $request, Closure $next): Response
+{
+    app()->setLocale(app(LocaleContext::class)->resolve($request->user()));
+
+    return $next($request);
+}
+```
+
+- [ ] **Step 5: Run the locale test in Docker**
 
 ```bash
 docker compose exec app php artisan test --filter=Locale -v
 ```
 
-- [ ] **Step 5: Commit the pt_BR defaults**
+- [ ] **Step 6: Commit the pt_BR defaults**
 
 ```bash
-git add .env.example config/app.php app/Models/User.php app/Providers/AppServiceProvider.php
+git add .env.example config/app.php app/Models/User.php app/Providers/AppServiceProvider.php app/Support/Locale/LocaleContext.php app/Http/Middleware/SetLocaleFromUserPreference.php
 git commit -m "feat: set pt_br as the primary locale"
 ```
 
@@ -141,4 +156,3 @@ user.locale > tenant.locale > APP_LOCALE > fallback_locale
 git add database/migrations app/Models/User.php app/Http/Controllers tests
 git commit -m "feat: persist user locale preference"
 ```
-

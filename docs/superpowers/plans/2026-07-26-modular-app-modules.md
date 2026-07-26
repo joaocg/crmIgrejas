@@ -4,7 +4,7 @@
 
 **Goal:** Build a modular backend around `app/Modules` where each domain module owns its routes, actions, policies, views/API resources, and church-specific overrides.
 
-**Architecture:** The module system uses a small registry and a consistent folder contract rather than a heavy package manager. Each module exposes a public interface to the rest of the app, while custom church behavior lives in a nested namespace like `app/Modules/Usuarios/{church-prefix}` so overrides do not leak into core logic.
+**Architecture:** The module system uses a small registry and a consistent folder contract rather than a heavy package manager. Each module exposes a public interface to the rest of the app, while custom church behavior lives in a nested namespace like `app/Modules/Users/{church_slug}` so overrides do not leak into core logic. Module, class, and table names should stay in English for consistency with Laravel conventions and long-term maintainability.
 
 **Tech Stack:** Laravel service providers, PSR-4 autoloading, module manifests, route registration, policies, actions, Eloquent, PHPUnit.
 
@@ -65,19 +65,19 @@ git commit -m "feat: add module loader contract"
 ### Task 2: Create the first real module boundaries
 
 **Files:**
-- Create: `app/Modules/Core/Providers/CoreModuleServiceProvider.php`
-- Create: `app/Modules/Identity/Providers/IdentityModuleServiceProvider.php`
-- Create: `app/Modules/Identity/Routes/api.php`
-- Create: `app/Modules/Identity/Actions/ListUsersAction.php`
-- Create: `app/Modules/Identity/Actions/CreateUserAction.php`
-- Create: `app/Modules/Identity/Actions/UpdateUserAction.php`
-- Create: `app/Modules/Identity/Actions/DeleteUserAction.php`
+- Create: `app/Modules/Nucleo/Providers/NucleoModuleServiceProvider.php`
+- Create: `app/Modules/Users/Providers/UsersModuleServiceProvider.php`
+- Create: `app/Modules/Users/Routes/api.php`
+- Create: `app/Modules/Users/Actions/ListUsersAction.php`
+- Create: `app/Modules/Users/Actions/CreateUserAction.php`
+- Create: `app/Modules/Users/Actions/UpdateUserAction.php`
+- Create: `app/Modules/Users/Actions/DeleteUserAction.php`
 - Modify: `routes/api.php`
 
 - [ ] **Step 1: Write route registration tests**
 
 ```php
-public function test_identity_module_registers_api_routes(): void
+public function test_users_module_registers_api_routes(): void
 {
     $this->getJson('/api/users')->assertStatus(401);
 }
@@ -94,21 +94,21 @@ Route::middleware('auth:sanctum')->group(function () {
 - [ ] **Step 3: Verify the module can own CRUD without touching the global routes**
 
 ```bash
-docker compose exec app php artisan test --filter=IdentityModule -v
+docker compose exec app php artisan test --filter=UsersModule -v
 ```
 
 - [ ] **Step 4: Commit the first module boundary**
 
 ```bash
 git add app/Modules routes/api.php tests
-git commit -m "feat: add identity module boundaries"
+git commit -m "feat: add users module boundaries"
 ```
 
 ### Task 3: Add church-specific overrides inside modules
 
 **Files:**
-- Create: `app/Modules/Identity/Churches/prefixo_da_igreja/IdentityOverrides.php`
-- Create: `app/Modules/Identity/Churches/prefixo_da_igreja/UserLabelPolicy.php`
+- Create: `app/Modules/Users/Churches/church_slug/UsersOverrides.php`
+- Create: `app/Modules/Users/Churches/church_slug/UserLabelPolicy.php`
 - Modify: `app/Support/Modules/ModuleLoader.php`
 
 - [ ] **Step 1: Write an override resolution test**
@@ -116,7 +116,7 @@ git commit -m "feat: add identity module boundaries"
 ```php
 public function test_church_override_is_used_when_present(): void
 {
-    $this->assertTrue(app(\App\Support\Modules\ModuleLoader::class)->hasOverride('Identity', 'prefixo_da_igreja'));
+    $this->assertTrue(app(\App\Support\Modules\ModuleLoader::class)->hasOverride('Users', 'church_slug'));
 }
 ```
 
@@ -134,4 +134,3 @@ if (file_exists($overridePath)) {
 git add app/Modules app/Support/Modules tests
 git commit -m "feat: support church-specific module overrides"
 ```
-

@@ -4,9 +4,9 @@
 
 **Goal:** Replace the legacy server-rendered UI with a clean SPA that uses Vue 3, PrimeVue 4, and a modular page shell to handle complex CRUD flows without forcing the user through full reloads.
 
-**Architecture:** The frontend is a true SPA with a single Laravel-served entrypoint, authenticated API calls, reusable PrimeVue layout primitives, and route-level code splitting by module. The first screen is the authenticated shell, then each module expands into list, create, edit, and detail views built from shared form and table building blocks.
+**Architecture:** The frontend is a true SPA with a single Laravel-served entrypoint, authenticated API calls, reusable PrimeVue layout primitives, and route-level code splitting by module. The first screen is the authenticated shell, then each module expands into list, create, edit, and detail views built from shared form and table building blocks. The visual system should look intentionally simple, bright, and modern rather than resembling the legacy admin UI.
 
-**Tech Stack:** Vue 3, Vite, PrimeVue 4, Vue Router, Pinia, Axios, vue-i18n, Tailwind or utility CSS as needed for layout tokens.
+**Tech Stack:** Vue 3, Vite, PrimeVue 4, Vue Router, Pinia, Axios, vue-i18n, CSS variables, and a small tokenized design system.
 
 ---
 
@@ -20,6 +20,7 @@
 - Create: `resources/js/stores/auth.js`
 - Create: `resources/js/layouts/AppShell.vue`
 - Create: `resources/js/pages/DashboardPage.vue`
+- Create: `resources/js/pages/auth/LoginPage.vue`
 - Modify: `resources/views/welcome.blade.php`
 - Modify: `routes/web.php`
 
@@ -85,7 +86,10 @@ public function test_dashboard_shell_shows_navigation(): void
 
 ```vue
 <script setup>
-defineProps({ modelValue: [String, Number, null] });
+defineProps({
+  modelValue: [String, Number, null],
+  label: String,
+});
 </script>
 ```
 
@@ -105,12 +109,12 @@ git commit -m "feat: add primevue app shell components"
 ### Task 3: Structure CRUD pages around module resources
 
 **Files:**
-- Create: `resources/js/pages/modules/identity/UserListPage.vue`
-- Create: `resources/js/pages/modules/identity/UserCreatePage.vue`
-- Create: `resources/js/pages/modules/identity/UserEditPage.vue`
-- Create: `resources/js/pages/modules/identity/UserShowPage.vue`
+- Create: `resources/js/pages/modules/usuarios/UserListPage.vue`
+- Create: `resources/js/pages/modules/usuarios/UserCreatePage.vue`
+- Create: `resources/js/pages/modules/usuarios/UserEditPage.vue`
+- Create: `resources/js/pages/modules/usuarios/UserShowPage.vue`
 - Create: `resources/js/api/http.js`
-- Create: `resources/js/api/modules/identity.js`
+- Create: `resources/js/api/modules/usuarios.js`
 
 - [ ] **Step 1: Write page-level API tests**
 
@@ -144,4 +148,3 @@ docker compose exec app php artisan test -v
 git add resources/js/api resources/js/pages
 git commit -m "feat: scaffold module CRUD pages"
 ```
-
