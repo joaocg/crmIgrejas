@@ -31,6 +31,7 @@ const route = useRoute();
 
 const items = [
     { to: '/dashboard', label: 'Dashboard', icon: '⌂' },
+    { to: '/users', label: 'Users', icon: '◫', meta: 'CRUD' },
     { to: '/login', label: 'Login', icon: '→' },
 ];
 </script>
