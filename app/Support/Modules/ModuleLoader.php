@@ -42,4 +42,39 @@ final class ModuleLoader
             }
         }
     }
+
+    public function hasOverride(string $moduleName, string $churchSlug): bool
+    {
+        return $this->overrideFiles($moduleName, $churchSlug) !== [];
+    }
+
+    public function loadOverrides(string $moduleName, string $churchSlug): void
+    {
+        foreach ($this->overrideFiles($moduleName, $churchSlug) as $overrideFile) {
+            require $overrideFile;
+        }
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function overrideFiles(string $moduleName, string $churchSlug): array
+    {
+        $module = $this->registry->find($moduleName);
+
+        if ($module === null) {
+            return [];
+        }
+
+        $overrideDirectory = $module->path.'/Churches/'.$churchSlug;
+
+        if (! is_dir($overrideDirectory)) {
+            return [];
+        }
+
+        $files = glob($overrideDirectory.'/*.php') ?: [];
+        sort($files);
+
+        return $files;
+    }
 }

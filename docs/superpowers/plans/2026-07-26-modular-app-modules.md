@@ -116,7 +116,7 @@ git commit -m "feat: add users module boundaries"
 - Create: `app/Modules/Users/Churches/church_slug/UserLabelPolicy.php`
 - Modify: `app/Support/Modules/ModuleLoader.php`
 
-- [ ] **Step 1: Write an override resolution test**
+- [x] **Step 1: Write an override resolution test**
 
 ```php
 public function test_church_override_is_used_when_present(): void
@@ -125,7 +125,7 @@ public function test_church_override_is_used_when_present(): void
 }
 ```
 
-- [ ] **Step 2: Resolve overrides by church prefix**
+- [x] **Step 2: Resolve overrides by church prefix**
 
 ```php
 if (file_exists($overridePath)) {
