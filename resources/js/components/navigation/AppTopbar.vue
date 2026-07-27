@@ -48,6 +48,7 @@ const createRoute = computed(() => {
         '/users': '/users/create',
         '/people': '/people/create',
         '/families': '/families/create',
+        '/groups': '/groups/create',
     };
 
     return mapping[route.path] ?? null;

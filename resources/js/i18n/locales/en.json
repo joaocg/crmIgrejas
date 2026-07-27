@@ -8,6 +8,7 @@
     "users": "Users",
     "people": "People",
     "families": "Families",
+    "groups": "Groups",
     "login": "Login",
     "module": "Module",
     "private_space": "Private Space"
@@ -150,6 +151,44 @@
       "name": "Silva Family",
       "email": "family@church.org",
       "mobile_phone": "(555) 555-5555"
+    }
+  },
+  "groups": {
+    "title": "Groups",
+    "eyebrow": "Module",
+    "copy": "Group records with list, create, edit, and detail screens for cells, ministries, and classes.",
+    "registered": "Registered groups",
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "description": "Description",
+      "is_active": "Active"
+    },
+    "create": {
+      "title": "Create group",
+      "heading": "Create group"
+    },
+    "edit": {
+      "title": "Edit group",
+      "heading": "Edit group"
+    },
+    "show": {
+      "title": "Group details",
+      "heading": "Group details"
+    },
+    "forms": {
+      "name": "Name",
+      "type": "Type",
+      "description": "Description"
+    },
+    "actions": {
+      "save_group": "Save group",
+      "update_group": "Update group"
+    },
+    "fallback_group": {
+      "name": "Small Group",
+      "type": "small-group",
+      "description": "Weekly meeting"
     }
   },
   "auth": {

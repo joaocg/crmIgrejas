@@ -36,6 +36,7 @@ const items = [
     { to: '/users', label: t('navigation.users'), icon: '◫', meta: 'CRUD' },
     { to: '/people', label: t('navigation.people'), icon: '◉', meta: 'CRUD' },
     { to: '/families', label: t('navigation.families'), icon: '◔', meta: 'CRUD' },
+    { to: '/groups', label: t('navigation.groups'), icon: '◑', meta: 'CRUD' },
     { to: '/login', label: t('navigation.login'), icon: '→' },
 ];
 </script>

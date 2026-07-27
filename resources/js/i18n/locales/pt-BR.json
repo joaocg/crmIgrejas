@@ -8,6 +8,7 @@
     "users": "Usuários",
     "people": "Pessoas",
     "families": "Famílias",
+    "groups": "Grupos",
     "login": "Entrar",
     "module": "Módulo",
     "private_space": "Espaço privado"
@@ -150,6 +151,44 @@
       "name": "Família Silva",
       "email": "familia@igreja.org",
       "mobile_phone": "(85) 99999-9999"
+    }
+  },
+  "groups": {
+    "title": "Grupos",
+    "eyebrow": "Módulo",
+    "copy": "Cadastro de grupos com listagem, criação, edição e detalhe para acompanhar células, ministérios e turmas.",
+    "registered": "Grupos cadastrados",
+    "columns": {
+      "name": "Nome",
+      "type": "Tipo",
+      "description": "Descrição",
+      "is_active": "Ativo"
+    },
+    "create": {
+      "title": "Criar grupo",
+      "heading": "Criar grupo"
+    },
+    "edit": {
+      "title": "Editar grupo",
+      "heading": "Editar grupo"
+    },
+    "show": {
+      "title": "Detalhes do grupo",
+      "heading": "Detalhes do grupo"
+    },
+    "forms": {
+      "name": "Nome",
+      "type": "Tipo",
+      "description": "Descrição"
+    },
+    "actions": {
+      "save_group": "Salvar grupo",
+      "update_group": "Atualizar grupo"
+    },
+    "fallback_group": {
+      "name": "Pequeno Grupo",
+      "type": "small-group",
+      "description": "Reunião semanal"
     }
   },
   "auth": {

@@ -120,6 +120,38 @@ const router = createRouter({
                 requiresAuth: true,
             },
         },
+        {
+            path: '/groups',
+            name: 'groups.index',
+            component: () => import('../pages/modules/groups/GroupListPage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/groups/create',
+            name: 'groups.create',
+            component: () => import('../pages/modules/groups/GroupCreatePage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/groups/:id/edit',
+            name: 'groups.edit',
+            component: () => import('../pages/modules/groups/GroupEditPage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/groups/:id',
+            name: 'groups.show',
+            component: () => import('../pages/modules/groups/GroupShowPage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
     ],
     scrollBehavior() {
         return { top: 0 };
