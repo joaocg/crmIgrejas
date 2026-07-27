@@ -16,6 +16,7 @@
 - Modify: `package.json`
 - Modify: `vite.config.js`
 - Create: `resources/js/app.js`
+- Create: `resources/js/App.vue`
 - Create: `resources/js/router/index.js`
 - Create: `resources/js/stores/auth.js`
 - Create: `resources/js/layouts/AppShell.vue`
@@ -24,7 +25,7 @@
 - Modify: `resources/views/welcome.blade.php`
 - Modify: `routes/web.php`
 
-- [ ] **Step 1: Write the frontend smoke test**
+- [x] **Step 1: Write the frontend smoke test**
 
 ```php
 public function test_spa_shell_is_served(): void
@@ -33,7 +34,7 @@ public function test_spa_shell_is_served(): void
 }
 ```
 
-- [ ] **Step 2: Implement the shell entrypoint**
+- [x] **Step 2: Implement the shell entrypoint**
 
 ```js
 import { createApp } from 'vue';
@@ -41,21 +42,21 @@ import router from './router';
 createApp(App).use(router).mount('#app');
 ```
 
-- [ ] **Step 3: Load the SPA from the Laravel view**
+- [x] **Step 3: Load the SPA from the Laravel view**
 
 ```blade
 <div id="app"></div>
 @vite(['resources/js/app.js'])
 ```
 
-- [ ] **Step 4: Verify the shell builds and renders**
+- [x] **Step 4: Verify the shell builds and renders**
 
 ```bash
-docker compose exec app npm run build
-docker compose exec app php artisan test --filter=SmokeTest -v
+docker run --rm -e HOME=/tmp -e npm_config_cache=/tmp/npm-cache -u $(id -u):$(id -g) -v /Volumes/nvme/Projetos/Joao/ecclesiacrm/crmIgrejas:/workspace -w /workspace node:22-bookworm npm run build
+docker compose exec app php artisan test --filter=SmokeTest
 ```
 
-- [ ] **Step 5: Commit the SPA shell**
+- [x] **Step 5: Commit the SPA shell**
 
 ```bash
 git add package.json vite.config.js resources/js resources/views/welcome.blade.php routes/web.php
