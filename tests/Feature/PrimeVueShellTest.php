@@ -10,5 +10,7 @@ class PrimeVueShellTest extends TestCase
     {
         $this->get('/dashboard')->assertOk()->assertSee('<div id="app"></div>', false);
         $this->get('/login')->assertOk()->assertSee('<div id="app"></div>', false);
+        $this->get('/people')->assertOk()->assertSee('<div id="app"></div>', false);
+        $this->get('/families')->assertOk()->assertSee('<div id="app"></div>', false);
     }
 }

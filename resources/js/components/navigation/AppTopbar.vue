@@ -14,13 +14,20 @@
                 hide-label
             />
 
-            <PButton :label="t('forms.new_record')" icon="pi pi-plus" severity="primary" />
+            <PButton
+                :label="t('forms.new_record')"
+                icon="pi pi-plus"
+                severity="primary"
+                :disabled="!createRoute"
+                @click="goToCreate"
+            />
         </div>
     </header>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 import { t } from '../../i18n';
 import BaseTextField from '../forms/BaseTextField.vue';
@@ -33,4 +40,22 @@ defineProps({
 });
 
 const search = ref('');
+const route = useRoute();
+const router = useRouter();
+
+const createRoute = computed(() => {
+    const mapping = {
+        '/users': '/users/create',
+        '/people': '/people/create',
+        '/families': '/families/create',
+    };
+
+    return mapping[route.path] ?? null;
+});
+
+function goToCreate() {
+    if (createRoute.value) {
+        router.push(createRoute.value);
+    }
+}
 </script>

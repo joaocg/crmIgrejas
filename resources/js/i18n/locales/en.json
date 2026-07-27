@@ -6,6 +6,8 @@
   "navigation": {
     "dashboard": "Dashboard",
     "users": "Users",
+    "people": "People",
+    "families": "Families",
     "login": "Login",
     "module": "Module",
     "private_space": "Private Space"
@@ -72,6 +74,82 @@
       "email": "admin@church.local",
       "locale": "pt_BR",
       "active": true
+    }
+  },
+  "people": {
+    "title": "People",
+    "eyebrow": "Module",
+    "copy": "People records with list, create, edit, and detail screens in a single SPA experience.",
+    "registered": "Registered people",
+    "columns": {
+      "first_name": "First name",
+      "last_name": "Last name",
+      "birth_date": "Birth date",
+      "newsletter_enabled": "Newsletter"
+    },
+    "create": {
+      "title": "Create person",
+      "heading": "Create person"
+    },
+    "edit": {
+      "title": "Edit person",
+      "heading": "Edit person"
+    },
+    "show": {
+      "title": "Person details",
+      "heading": "Person details"
+    },
+    "forms": {
+      "first_name": "First name",
+      "last_name": "Last name",
+      "birth_date": "Birth date"
+    },
+    "actions": {
+      "save_person": "Save person",
+      "update_person": "Update person"
+    },
+    "fallback_person": {
+      "first_name": "Maria",
+      "last_name": "Silva",
+      "birth_date": "1990-01-01"
+    }
+  },
+  "families": {
+    "title": "Families",
+    "eyebrow": "Module",
+    "copy": "Family records with list, create, edit, and detail screens for pastoral and admin workflows.",
+    "registered": "Registered families",
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "mobile_phone": "Mobile",
+      "newsletter_enabled": "Newsletter"
+    },
+    "create": {
+      "title": "Create family",
+      "heading": "Create family"
+    },
+    "edit": {
+      "title": "Edit family",
+      "heading": "Edit family"
+    },
+    "show": {
+      "title": "Family details",
+      "heading": "Family details"
+    },
+    "forms": {
+      "name": "Name",
+      "email": "Email",
+      "mobile_phone": "Mobile"
+    },
+    "actions": {
+      "save_family": "Save family",
+      "update_family": "Update family"
+    },
+    "fallback_family": {
+      "name": "Silva Family",
+      "email": "family@church.org",
+      "mobile_phone": "(555) 555-5555"
     }
   },
   "auth": {

@@ -6,6 +6,8 @@
   "navigation": {
     "dashboard": "Painel",
     "users": "Usuários",
+    "people": "Pessoas",
+    "families": "Famílias",
     "login": "Entrar",
     "module": "Módulo",
     "private_space": "Espaço privado"
@@ -72,6 +74,82 @@
       "email": "admin@church.local",
       "locale": "pt_BR",
       "active": true
+    }
+  },
+  "people": {
+    "title": "Pessoas",
+    "eyebrow": "Módulo",
+    "copy": "Cadastro de pessoas com listagem, criação, edição e detalhe em uma única experiência SPA.",
+    "registered": "Pessoas cadastradas",
+    "columns": {
+      "first_name": "Nome",
+      "last_name": "Sobrenome",
+      "birth_date": "Nascimento",
+      "newsletter_enabled": "Boletim"
+    },
+    "create": {
+      "title": "Criar pessoa",
+      "heading": "Criar pessoa"
+    },
+    "edit": {
+      "title": "Editar pessoa",
+      "heading": "Editar pessoa"
+    },
+    "show": {
+      "title": "Detalhes da pessoa",
+      "heading": "Detalhes da pessoa"
+    },
+    "forms": {
+      "first_name": "Nome",
+      "last_name": "Sobrenome",
+      "birth_date": "Nascimento"
+    },
+    "actions": {
+      "save_person": "Salvar pessoa",
+      "update_person": "Atualizar pessoa"
+    },
+    "fallback_person": {
+      "first_name": "Maria",
+      "last_name": "Silva",
+      "birth_date": "1990-01-01"
+    }
+  },
+  "families": {
+    "title": "Famílias",
+    "eyebrow": "Módulo",
+    "copy": "Cadastro de famílias com listagem, criação, edição e detalhe para fluxos pastorais e administrativos.",
+    "registered": "Famílias cadastradas",
+    "columns": {
+      "name": "Nome",
+      "email": "E-mail",
+      "mobile_phone": "Celular",
+      "newsletter_enabled": "Boletim"
+    },
+    "create": {
+      "title": "Criar família",
+      "heading": "Criar família"
+    },
+    "edit": {
+      "title": "Editar família",
+      "heading": "Editar família"
+    },
+    "show": {
+      "title": "Detalhes da família",
+      "heading": "Detalhes da família"
+    },
+    "forms": {
+      "name": "Nome",
+      "email": "E-mail",
+      "mobile_phone": "Celular"
+    },
+    "actions": {
+      "save_family": "Salvar família",
+      "update_family": "Atualizar família"
+    },
+    "fallback_family": {
+      "name": "Família Silva",
+      "email": "familia@igreja.org",
+      "mobile_phone": "(85) 99999-9999"
     }
   },
   "auth": {

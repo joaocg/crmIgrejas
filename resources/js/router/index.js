@@ -56,6 +56,70 @@ const router = createRouter({
                 requiresAuth: true,
             },
         },
+        {
+            path: '/people',
+            name: 'people.index',
+            component: () => import('../pages/modules/people/PeopleListPage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/people/create',
+            name: 'people.create',
+            component: () => import('../pages/modules/people/PeopleCreatePage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/people/:id/edit',
+            name: 'people.edit',
+            component: () => import('../pages/modules/people/PeopleEditPage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/people/:id',
+            name: 'people.show',
+            component: () => import('../pages/modules/people/PeopleShowPage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/families',
+            name: 'families.index',
+            component: () => import('../pages/modules/families/FamilyListPage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/families/create',
+            name: 'families.create',
+            component: () => import('../pages/modules/families/FamilyCreatePage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/families/:id/edit',
+            name: 'families.edit',
+            component: () => import('../pages/modules/families/FamilyEditPage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/families/:id',
+            name: 'families.show',
+            component: () => import('../pages/modules/families/FamilyShowPage.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
     ],
     scrollBehavior() {
         return { top: 0 };
