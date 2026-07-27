@@ -17,7 +17,7 @@
 - Create: `database/legacy/legacy-tables.csv`
 - Create: `database/legacy/legacy-fields.csv`
 
-- [ ] **Step 1: Capture the legacy sources**
+- [x] **Step 1: Capture the legacy sources**
 
 ```text
 propel/main.schema.xml
@@ -25,7 +25,7 @@ src/mysql/install/Install.sql
 src/EcclesiaCRM/model/*
 ```
 
-- [ ] **Step 2: Classify the core domains**
+- [x] **Step 2: Classify the core domains**
 
 ```text
 Identity: user_usr, role tables, permissions, user preferences
@@ -36,7 +36,7 @@ Operations: donations, pledges, deposits, receipts, finance exports
 Legacy hotspots: config_cfg, userconfig_ucfg, pastoral care, mail, and plugin-owned tables
 ```
 
-- [ ] **Step 3: Commit the inventory artifacts**
+- [x] **Step 3: Commit the inventory artifacts**
 
 ```bash
 git add docs/superpowers/plans/2026-07-26-database-map.md database/legacy
@@ -49,16 +49,14 @@ git commit -m "docs: inventory legacy ecclesiacrm schema"
 - Create: `database/migrations/2026_07_26_000001_create_tenants_table.php`
 - Create: `database/migrations/2026_07_26_000002_create_users_table.php`
 - Create: `database/migrations/2026_07_26_000003_create_roles_table.php`
-- Create: `database/migrations/2026_07_26_000004_create_persons_table.php`
-- Create: `database/migrations/2026_07_26_000005_create_families_table.php`
-- Create: `database/migrations/2026_07_26_000006_create_addresses_table.php`
-- Create: `database/migrations/2026_07_26_000007_create_modules_table.php`
-- Create: `database/migrations/2026_07_26_000008_create_module_settings_table.php`
-- Create: `database/migrations/2026_07_26_000009_create_contacts_table.php`
-- Create: `database/migrations/2026_07_26_000010_create_activity_tables.php`
+- Create: `database/migrations/2026_07_26_000004_create_core_people_tables.php`
+- Create: `database/migrations/2026_07_26_000005_create_module_tables.php`
+- Create: `database/migrations/2026_07_26_000006_create_group_and_activity_tables.php`
+- Create: `database/migrations/2026_07_26_000007_create_notes_and_care_tables.php`
+- Create: `database/migrations/2026_07_27_000001_create_personal_access_tokens_table.php`
 - Modify: `database/seeders/DatabaseSeeder.php`
 
-- [ ] **Step 1: Write schema tests for key foreign keys**
+- [x] **Step 1: Write schema tests for key foreign keys**
 
 ```php
 public function test_persons_belong_to_families_and_tenants(): void
@@ -72,7 +70,7 @@ public function test_users_have_locale_and_tenant_scoping(): void
 }
 ```
 
-- [ ] **Step 2: Implement the migrations with explicit FK and index strategy**
+- [x] **Step 2: Implement the migrations with explicit FK and index strategy**
 
 ```php
 $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
@@ -80,21 +78,21 @@ $table->foreignId('family_id')->nullable()->constrained()->nullOnDelete();
 $table->index(['tenant_id', 'last_name']);
 ```
 
-- [ ] **Step 3: Seed a minimal tenant and admin user**
+- [x] **Step 3: Seed a minimal tenant and admin user**
 
 ```php
 Tenant::factory()->create(['slug' => 'default']);
 User::factory()->create(['email' => 'admin@localhost']);
 ```
 
-- [ ] **Step 4: Run migration assertions in Docker**
+- [x] **Step 4: Run migration assertions in Docker**
 
 ```bash
 docker compose exec app php artisan migrate:fresh --seed
 docker compose exec app php artisan test --filter=Database -v
 ```
 
-- [ ] **Step 5: Commit the normalized baseline**
+- [x] **Step 5: Commit the normalized baseline**
 
 ```bash
 git add database/migrations database/seeders
@@ -108,7 +106,7 @@ git commit -m "feat: add normalized database baseline"
 - Create: `database/seeders/LegacyDataSeeder.php`
 - Create: `tests/Feature/LegacyImportTest.php`
 
-- [ ] **Step 1: Write the import contract test**
+- [x] **Step 1: Write the import contract test**
 
 ```php
 public function test_legacy_import_creates_tenant_and_admin(): void
@@ -117,7 +115,7 @@ public function test_legacy_import_creates_tenant_and_admin(): void
 }
 ```
 
-- [ ] **Step 2: Implement the import command in batches**
+- [x] **Step 2: Implement the import command in batches**
 
 ```php
 public function handle(): int
@@ -127,14 +125,14 @@ public function handle(): int
 }
 ```
 
-- [ ] **Step 3: Verify idempotency**
+- [x] **Step 3: Verify idempotency**
 
 ```bash
 docker compose exec app php artisan legacy:import
 docker compose exec app php artisan legacy:import
 ```
 
-- [ ] **Step 4: Commit the import path**
+- [x] **Step 4: Commit the import path**
 
 ```bash
 git add app/Console/Commands database/seeders tests/Feature/LegacyImportTest.php

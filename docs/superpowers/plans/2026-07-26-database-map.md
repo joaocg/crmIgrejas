@@ -2,14 +2,15 @@
 
 ## Source Files
 
-- `/Volumes/nvme/Projetos/Joao/ecclesiacrm/propel/main.schema.xml`
-- `/Volumes/nvme/Projetos/Joao/ecclesiacrm/demo/EcclesiaCRM-Database.sql`
+- `propel/main.schema.xml`
+- `src/mysql/install/Install.sql`
+- `src/EcclesiaCRM/model/*`
 
 ## What Was Confirmed
 
 - The legacy system is a wide EcclesiaCRM schema with person, family, group, event, finance, notes, pastoral care, privacy, plugin, kiosk, and calendar-sync domains.
 - The schema contains many legacy tables that are not part of the normalized Laravel model target.
-- The dump and Propel schema are not perfectly identical, so the Propel schema is treated as the primary source of truth and the SQL dump is used as a consistency check.
+- The Propel schema is the primary source of truth, and the SQL install dump is treated as a consistency check.
 
 ## Domain Classification
 
@@ -54,3 +55,12 @@ The new Laravel project will keep all table, module, class, and migration names 
 - `person_per` and `family_fam` carry both entity data and audit/contact/address details.
 - `pledge_plg`, `deposit_dep`, and `autopayment_aut` are tightly coupled and should be split into normalized finance entities.
 - The legacy calendar/address book tables should only be carried forward if the new product still needs CalDAV/CardDAV compatibility.
+
+### Baseline already in place
+
+- `tenants`, `users`, `roles`
+- `addresses`, `families`, `persons`
+- `module_definitions`, `module_settings`
+- `groups`, `group_memberships`, `events`, `event_attendances`
+- `notes`, `pastoral_care_records`
+- `personal_access_tokens` for Sanctum bearer auth
