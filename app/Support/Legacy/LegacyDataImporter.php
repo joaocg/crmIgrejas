@@ -102,21 +102,23 @@ class LegacyDataImporter
     {
         $now = now();
 
-        DB::table('users')->updateOrInsert(
-            ['email' => 'admin@localhost'],
-            [
-                'tenant_id' => $tenantId,
-                'role_id' => $roleId,
-                'name' => 'Admin',
-                'locale' => 'pt_BR',
-                'active' => true,
-                'password' => Hash::make('password'),
-                'email_verified_at' => $now,
-                'remember_token' => null,
-                'updated_at' => $now,
-                'created_at' => $now,
-            ]
-        );
+        foreach (['admin@localhost', 'admin@church.local'] as $email) {
+            DB::table('users')->updateOrInsert(
+                ['email' => $email],
+                [
+                    'tenant_id' => $tenantId,
+                    'role_id' => $roleId,
+                    'name' => 'Admin',
+                    'locale' => 'pt_BR',
+                    'active' => true,
+                    'password' => Hash::make('password'),
+                    'email_verified_at' => $now,
+                    'remember_token' => null,
+                    'updated_at' => $now,
+                    'created_at' => $now,
+                ]
+            );
+        }
     }
 
     protected function importFamily(int $tenantId, object $legacyFamily): int

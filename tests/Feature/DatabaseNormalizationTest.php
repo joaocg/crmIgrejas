@@ -30,6 +30,7 @@ class DatabaseNormalizationTest extends TestCase
 
         $this->assertDatabaseHas('tenants', ['slug' => 'default']);
         $this->assertDatabaseHas('users', ['email' => 'admin@localhost']);
+        $this->assertDatabaseHas('users', ['email' => 'admin@church.local']);
         $this->assertDatabaseHas('roles', ['slug' => 'admin']);
     }
 }
