@@ -68,16 +68,18 @@ git commit -m "feat: add module loader contract"
 ### Task 2: Create the first real module boundaries
 
 **Files:**
+- Create: `app/Modules/Users/module.php`
 - Create: `app/Modules/Core/Providers/CoreModuleServiceProvider.php`
 - Create: `app/Modules/Users/Providers/UsersModuleServiceProvider.php`
 - Create: `app/Modules/Users/Routes/api.php`
+- Create: `app/Modules/Users/Http/Controllers/UserController.php`
 - Create: `app/Modules/Users/Actions/ListUsersAction.php`
 - Create: `app/Modules/Users/Actions/CreateUserAction.php`
 - Create: `app/Modules/Users/Actions/UpdateUserAction.php`
 - Create: `app/Modules/Users/Actions/DeleteUserAction.php`
 - Modify: `routes/api.php`
 
-- [ ] **Step 1: Write route registration tests**
+- [x] **Step 1: Write route registration tests**
 
 ```php
 public function test_users_module_registers_api_routes(): void
@@ -86,7 +88,7 @@ public function test_users_module_registers_api_routes(): void
 }
 ```
 
-- [ ] **Step 2: Implement module-local route files**
+- [x] **Step 2: Implement module-local route files**
 
 ```php
 Route::middleware('auth:sanctum')->group(function () {
@@ -94,13 +96,13 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 ```
 
-- [ ] **Step 3: Verify the module can own CRUD without touching the global routes**
+- [x] **Step 3: Verify the module can own CRUD without touching the global routes**
 
 ```bash
 docker compose exec app php artisan test --filter=UsersModule -v
 ```
 
-- [ ] **Step 4: Commit the first module boundary**
+- [x] **Step 4: Commit the first module boundary**
 
 ```bash
 git add app/Modules routes/api.php tests
