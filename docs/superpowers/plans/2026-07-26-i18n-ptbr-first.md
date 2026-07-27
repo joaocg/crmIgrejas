@@ -4,7 +4,7 @@
 
 **Goal:** Make pt_BR the primary language of the system for the admin user while keeping English available as fallback and making the frontend translation-ready for future languages.
 
-**Architecture:** Localization is centralized in Laravel config, translated UI strings are grouped by domain, and the browser language only overrides the default after the user profile is loaded. This keeps the app predictable for church staff while still allowing tenant-specific language strategies later. The resolution order is explicit: user preference, then tenant preference, then `APP_LOCALE`, then fallback.
+**Architecture:** Localization is centralized in Laravel config, translated UI strings are grouped by domain, and the browser language only overrides the default after the user profile is loaded. This keeps the app predictable for church staff while still allowing tenant-specific language strategies later. The resolution order is explicit: user preference, then `APP_LOCALE`, then fallback.
 
 **Tech Stack:** Laravel localization, vue-i18n, JSON translation files, user profile preference storage.
 
@@ -16,7 +16,6 @@
 - Modify: `.env.example`
 - Modify: `config/app.php`
 - Modify: `app/Models/User.php`
-- Modify: `app/Providers/AppServiceProvider.php`
 - Create: `app/Support/Locale/LocaleContext.php`
 - Create: `app/Http/Middleware/SetLocaleFromUserPreference.php`
 
@@ -37,14 +36,12 @@ public function test_locale_defaults_to_pt_br(): void
 'faker_locale' => env('APP_FAKER_LOCALE', 'pt_BR'),
 ```
 
-- [ ] **Step 3: Resolve locale from user and tenant preference**
+- [ ] **Step 3: Resolve locale from user preference**
 
 ```php
 public function resolve(?User $user = null): string
 {
-    return $user?->locale
-        ?? $user?->tenant?->locale
-        ?? config('app.locale');
+    return $user?->locale ?? config('app.locale');
 }
 ```
 
@@ -68,7 +65,7 @@ docker compose exec app php artisan test --filter=Locale -v
 - [ ] **Step 6: Commit the pt_BR defaults**
 
 ```bash
-git add .env.example config/app.php app/Models/User.php app/Providers/AppServiceProvider.php app/Support/Locale/LocaleContext.php app/Http/Middleware/SetLocaleFromUserPreference.php
+git add .env.example config/app.php app/Models/User.php app/Support/Locale/LocaleContext.php app/Http/Middleware/SetLocaleFromUserPreference.php
 git commit -m "feat: set pt_br as the primary locale"
 ```
 
@@ -147,7 +144,7 @@ $user->save();
 - [ ] **Step 3: Verify preference resolution order**
 
 ```text
-user.locale > tenant.locale > APP_LOCALE > fallback_locale
+user.locale > APP_LOCALE > fallback_locale
 ```
 
 - [ ] **Step 4: Commit preference persistence**

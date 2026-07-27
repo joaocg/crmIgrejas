@@ -6,9 +6,11 @@
 
 **Architecture:** The migration is split into independent tracks so each one can ship a working slice without blocking the others. Foundation work establishes the containerized Laravel runtime, queues, cache, observability, and developer workflow. The application layer is then rebuilt around normalized data, module boundaries under `app/Modules`, and a SPA frontend that consumes module APIs.
 
-**Tech Stack:** Laravel 12, PHP 8.3, Docker Compose, MySQL 8.4, Redis, Memcached, Sanctum, Telescope, Vue 3, PrimeVue 4, Pinia, Vue Router, Vite, i18n.
+**Tech Stack:** Laravel 12, PHP 8.4, Docker Compose, MySQL 8.4, Redis, Memcached, Sanctum, Telescope, Vue 3, PrimeVue 4, Pinia, Vue Router, Vite, i18n.
 
 **Current system findings:** The legacy app is a Slim 4 + Propel monolith with server-rendered pages, very wide tables, and mixed session/bootstrap concerns. The key legacy entry points are `src/index.php`, `src/api/index.php`, and `src/EcclesiaCRM/Bootstrapper.php`. The most important source schema files are `propel/main.schema.xml` and `src/mysql/install/Install.sql`. The observed pain points are asset loading fragility, lock-screen/session churn, language mismatch for admin users, and domain logic spread across unrelated tables.
+
+**Repository baseline already confirmed in `crmIgrejas`:** Laravel 12 boots inside Docker, `pt_BR` is the active default locale, Sanctum and Telescope are loaded explicitly, and the compose stack already includes MySQL, Redis, Memcached, queue, and scheduler services. The remaining work is not bootstrapping but replacing the legacy domain model and SPA shell.
 
 ---
 

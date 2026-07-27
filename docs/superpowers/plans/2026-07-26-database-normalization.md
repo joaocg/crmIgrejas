@@ -4,7 +4,7 @@
 
 **Goal:** Replace the legacy denormalized schema with a clean relational model that supports churches, tenants, users, members, families, groups, events, finance, and customization overlays without duplicating the legacy coupling.
 
-**Architecture:** The legacy schema is treated as input, not as the design target. The normalized model introduces a tenant boundary first, then core identity tables, then domain tables with explicit foreign keys and audit metadata. Migration work is staged so the app can bootstrap on a slim seed set before historical data is backfilled.
+**Architecture:** The legacy schema is treated as input, not as the design target. The normalized model introduces a tenant boundary first, then core identity tables, then domain tables with explicit foreign keys and audit metadata. Migration work is staged so the app can bootstrap on a slim seed set before historical data is backfilled. All new table, model, module, and class names stay in English; legacy names appear only in the inventory artifacts and import mapping.
 
 **Tech Stack:** Laravel migrations, seeders, MySQL 8.4, Eloquent, database assertions, factory-driven tests.
 

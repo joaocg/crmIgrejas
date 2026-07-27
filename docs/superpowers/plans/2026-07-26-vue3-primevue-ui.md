@@ -109,12 +109,12 @@ git commit -m "feat: add primevue app shell components"
 ### Task 3: Structure CRUD pages around module resources
 
 **Files:**
-- Create: `resources/js/pages/modules/usuarios/UserListPage.vue`
-- Create: `resources/js/pages/modules/usuarios/UserCreatePage.vue`
-- Create: `resources/js/pages/modules/usuarios/UserEditPage.vue`
-- Create: `resources/js/pages/modules/usuarios/UserShowPage.vue`
+- Create: `resources/js/pages/modules/users/UserListPage.vue`
+- Create: `resources/js/pages/modules/users/UserCreatePage.vue`
+- Create: `resources/js/pages/modules/users/UserEditPage.vue`
+- Create: `resources/js/pages/modules/users/UserShowPage.vue`
 - Create: `resources/js/api/http.js`
-- Create: `resources/js/api/modules/usuarios.js`
+- Create: `resources/js/api/modules/users.js`
 
 - [ ] **Step 1: Write page-level API tests**
 

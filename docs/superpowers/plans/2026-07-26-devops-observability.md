@@ -6,7 +6,7 @@
 
 **Architecture:** The environment is container-first and service-separated. Queue workers, scheduler, cache, and telemetry are explicit services so developers can observe runtime behavior instead of guessing. Telescope remains a local-only introspection tool, and the runtime config is optimized for repeatable dev startup.
 
-**Tech Stack:** Docker Compose, Nginx, PHP-FPM, MySQL, Redis, Memcached, Laravel queue worker, Laravel scheduler, Telescope.
+**Tech Stack:** Docker Compose, Nginx, PHP 8.4-FPM, MySQL, Redis, Memcached, Laravel queue worker, Laravel scheduler, Telescope.
 
 ---
 
