@@ -10,7 +10,9 @@
 
 **Current system findings:** The legacy app is a Slim 4 + Propel monolith with server-rendered pages, very wide tables, and mixed session/bootstrap concerns. The key legacy entry points are `src/index.php`, `src/api/index.php`, and `src/EcclesiaCRM/Bootstrapper.php`. The most important source schema files are `propel/main.schema.xml` and `src/mysql/install/Install.sql`. The observed pain points are asset loading fragility, lock-screen/session churn, language mismatch for admin users, and domain logic spread across unrelated tables.
 
-**Repository baseline already confirmed in `crmIgrejas`:** Laravel 12 boots inside Docker, `pt_BR` is the active default locale, Sanctum and Telescope are loaded explicitly, and the compose stack already includes MySQL, Redis, Memcached, queue, and scheduler services. The remaining work is not bootstrapping but replacing the legacy domain model and SPA shell.
+**Current repo findings in `crmIgrejas`:** The new project already boots as Laravel 12 inside Docker, uses `pt_BR` as the primary locale, exposes authenticated API access through Sanctum, keeps Telescope restricted to development, and includes Redis, Memcached, queue, and scheduler services in the compose stack. The current codebase also already has the module loader, the `Core` and `Users` module boundaries, a normalized baseline database, and a Vue 3 + PrimeVue SPA shell. The next work is not to re-bootstrap the app, but to keep expanding the domain model and module surface while the legacy repo remains the source of truth for missing business rules.
+
+**Current migration priority:** 1) normalize any remaining legacy coupling that still matters to the target product, 2) grow the module-by-module CRUD surface in English names only, 3) refine the SPA UX for complex workflows, and 4) keep the import path available only as a bridge from the legacy database.
 
 ---
 
@@ -34,6 +36,8 @@ Use this order:
 5. i18n
 6. DevOps/observability hardening
 
+The foundation, i18n, and observability slices are already implemented in `crmIgrejas`; keep these tasks in the roadmap as guardrails, not as active implementation work.
+
 - [ ] **Step 2: Confirm the minimal ship-ready slice**
 
 The first useful slice is:
@@ -44,6 +48,8 @@ Redis, Memcached, Sanctum, and Telescope are wired
 Base module loading exists
 SPA shell can call authenticated API endpoints
 ```
+
+In the current repository, this slice is already functional. The remaining milestone is the first complete business workflow built on top of the normalized model and module boundaries.
 
 - [ ] **Step 3: Commit the roadmap**
 
@@ -67,6 +73,8 @@ Schema sources: propel/main.schema.xml and src/mysql/install/Install.sql
 Key pain points: wide tables, coupled session handling, server-rendered pages, mixed domain concerns, lock-loop behavior, locale mismatch, and asset pipeline fragility
 ```
 
+The legacy analysis should stay in the roadmap so future module work can be traced back to the original schema and behavior instead of guessing from the new code alone.
+
 - [ ] **Step 2: Record the target constraints**
 
 ```text
@@ -76,6 +84,8 @@ Frontend: Vue 3 SPA with PrimeVue 4
 Auth: Sanctum-based session/token auth
 Infra: Docker Compose with mysql, redis, memcached, queue worker, scheduler, Telescope for local dev
 ```
+
+These constraints describe the target repository, not the legacy monolith. The new project should not inherit old naming patterns, table names, or module names.
 
 - [ ] **Step 3: Re-commit the updated roadmap**
 
