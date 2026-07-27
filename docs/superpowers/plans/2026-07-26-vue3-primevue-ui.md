@@ -121,8 +121,11 @@ git commit -m "feat: add primevue app shell components"
 - Create: `resources/js/pages/modules/users/UserShowPage.vue`
 - Create: `resources/js/api/http.js`
 - Create: `resources/js/api/modules/users.js`
+- Modify: `resources/js/router/index.js`
+- Modify: `resources/js/components/navigation/AppSidebar.vue`
+- Create: `tests/Feature/UsersModuleTest.php`
 
-- [ ] **Step 1: Write page-level API tests**
+- [x] **Step 1: Write page-level API tests**
 
 ```php
 public function test_users_index_returns_json(): void
@@ -131,7 +134,7 @@ public function test_users_index_returns_json(): void
 }
 ```
 
-- [ ] **Step 2: Implement list/create/edit/show pages**
+- [x] **Step 2: Implement list/create/edit/show pages**
 
 ```vue
 <template>
@@ -141,14 +144,14 @@ public function test_users_index_returns_json(): void
 </template>
 ```
 
-- [ ] **Step 3: Verify the build and route split**
+- [x] **Step 3: Verify the build and route split**
 
 ```bash
-docker compose exec app npm run build
-docker compose exec app php artisan test -v
+docker run --rm -e HOME=/tmp -e npm_config_cache=/tmp/npm-cache -u $(id -u):$(id -g) -v /Volumes/nvme/Projetos/Joao/ecclesiacrm/crmIgrejas:/workspace -w /workspace node:22-bookworm npm run build
+docker compose exec app php artisan test
 ```
 
-- [ ] **Step 4: Commit the CRUD page structure**
+- [x] **Step 4: Commit the CRUD page structure**
 
 ```bash
 git add resources/js/api resources/js/pages
