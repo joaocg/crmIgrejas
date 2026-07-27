@@ -40,7 +40,16 @@
                         />
                     </label>
 
-                    <PButton type="submit" class="login-page__submit" :label="t('auth.login')" icon="pi pi-arrow-right" />
+                    <PButton
+                        type="submit"
+                        class="login-page__submit"
+                        :label="t('auth.login')"
+                        icon="pi pi-arrow-right"
+                        :loading="loading"
+                        :disabled="loading"
+                    />
+
+                    <p v-if="error" class="login-page__error">{{ error }}</p>
                 </form>
             </template>
         </PCard>
@@ -48,16 +57,43 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
+import { login } from '../../api/auth';
 import { t } from '../../i18n';
+import { useAuthStore } from '../../stores/auth';
 
 const credentials = reactive({
     email: 'admin@church.local',
     password: '',
 });
 
-function submit() {
-    //
+const error = ref('');
+const loading = ref(false);
+const auth = useAuthStore();
+const route = useRoute();
+const router = useRouter();
+
+async function submit() {
+    error.value = '';
+    loading.value = true;
+
+    try {
+        const response = await login(credentials);
+        auth.setSession(response.data.user, response.data.token);
+
+        const redirect = typeof route.query.redirect === 'string' && route.query.redirect !== ''
+            ? route.query.redirect
+            : '/dashboard';
+
+        await router.push(redirect);
+    } catch (exception) {
+        error.value = exception?.response?.data?.errors?.email?.[0]
+            ?? exception?.response?.data?.message
+            ?? t('auth.failed');
+    } finally {
+        loading.value = false;
+    }
 }
 </script>

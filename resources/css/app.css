@@ -260,6 +260,15 @@ a {
     justify-content: center;
 }
 
+.login-page__error {
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 14px;
+    color: #991b1b;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
 @media (max-width: 1024px) {
     .app-shell {
         padding: 12px;
