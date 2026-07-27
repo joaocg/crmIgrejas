@@ -34,9 +34,27 @@
                 </PCard>
             </div>
         </div>
+
+        <PCard style="margin-top: 24px;">
+            <template #title>Recent activity</template>
+            <template #content>
+                <BaseDataTable :rows="recentActivity" :rows-per-page="5">
+                    <PColumn field="name" header="Name" />
+                    <PColumn field="module" header="Module" />
+                    <PColumn field="status" header="Status" />
+                </BaseDataTable>
+            </template>
+        </PCard>
     </AppShell>
 </template>
 
 <script setup>
 import AppShell from '../layouts/AppShell.vue';
+import BaseDataTable from '../components/tables/BaseDataTable.vue';
+
+const recentActivity = [
+    { name: 'Admin user updated', module: 'Users', status: 'Saved' },
+    { name: 'System locale set', module: 'Core', status: 'Ready' },
+    { name: 'Church override loaded', module: 'Users', status: 'Loaded' },
+];
 </script>

@@ -1,0 +1,88 @@
+:root {
+    --surface-muted: rgba(255, 255, 255, 0.58);
+    --surface-strong: rgba(255, 255, 255, 0.9);
+    --field-bg: rgba(255, 255, 255, 0.8);
+    --field-border: rgba(15, 23, 42, 0.1);
+    --field-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.app-field {
+    display: grid;
+    gap: 8px;
+}
+
+.app-field__label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--app-muted);
+}
+
+.app-field__input {
+    width: 100%;
+}
+
+.app-field :is(input, .p-inputtext, .p-password input, .p-dropdown) {
+    border-color: var(--field-border);
+    background: var(--field-bg);
+    box-shadow: var(--field-shadow);
+}
+
+.app-field :is(input, .p-inputtext, .p-password input, .p-dropdown):focus {
+    border-color: var(--app-primary);
+}
+
+.app-shell__surface {
+    background:
+        linear-gradient(180deg, var(--surface-strong), var(--surface-muted)),
+        var(--app-surface);
+}
+
+.app-sidebar {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(241, 245, 249, 0.68));
+}
+
+.app-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    backdrop-filter: blur(18px);
+}
+
+.app-topbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-topbar__search {
+    width: min(360px, 44vw);
+}
+
+.app-nav__icon {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--app-primary);
+}
+
+.app-nav__meta {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--app-primary-strong);
+    background: rgba(37, 99, 235, 0.08);
+    border-radius: 999px;
+    padding: 4px 10px;
+}
+
+.base-data-table {
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--app-border);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
