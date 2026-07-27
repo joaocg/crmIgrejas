@@ -4,7 +4,11 @@ use Laravel\Telescope\Http\Middleware\Authorize;
 use Laravel\Telescope\Watchers;
 
 return [
-    'enabled' => env('TELESCOPE_ENABLED', env('APP_ENV', 'production') !== 'production'),
+    'enabled' => filter_var(
+        env('TELESCOPE_ENABLED', env('APP_ENV', 'production') !== 'production'),
+        FILTER_VALIDATE_BOOL,
+        FILTER_NULL_ON_FAILURE
+    ) ?? env('APP_ENV', 'production') !== 'production',
     'domain' => env('TELESCOPE_DOMAIN'),
     'path' => env('TELESCOPE_PATH', 'telescope'),
     'driver' => env('TELESCOPE_DRIVER', 'database'),

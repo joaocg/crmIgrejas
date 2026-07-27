@@ -44,7 +44,7 @@ services:
     image: crmigrejas-app
     container_name: crmigrejas-queue
     working_dir: /var/www/html
-    command: php artisan queue:work --sleep=3 --tries=1 --timeout=90
+    command: sh /var/www/html/docker/queue/entrypoint.sh
     volumes:
       - ./:/var/www/html
     environment:
@@ -64,15 +64,15 @@ services:
       mysql:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
       memcached:
-        condition: service_started
+        condition: service_healthy
 
   scheduler:
     image: crmigrejas-app
     container_name: crmigrejas-scheduler
     working_dir: /var/www/html
-    command: php artisan schedule:work
+    command: sh /var/www/html/docker/scheduler/entrypoint.sh
     volumes:
       - ./:/var/www/html
     environment:
@@ -92,9 +92,9 @@ services:
       mysql:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
       memcached:
-        condition: service_started
+        condition: service_healthy
 
   mysql:
     image: mysql:8.4
@@ -121,11 +121,21 @@ services:
     volumes:
       - redis-data:/data
       - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
   memcached:
     image: memcached:1.6-alpine
     container_name: crmigrejas-memcached
     command: ["memcached", "-m", "128", "-c", "1024", "-I", "2m", "-p", "11211", "-u", "memcached"]
+    healthcheck:
+      test: ["CMD-SHELL", "printf 'stats\\r\\nquit\\r\\n' | nc -w 2 127.0.0.1 11211 | grep -q 'STAT '"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
 volumes:
   mysql-data:

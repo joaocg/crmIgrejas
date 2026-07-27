@@ -20,7 +20,7 @@
 - Modify: `config/queue.php`
 - Modify: `config/cache.php`
 
-- [ ] **Step 1: Write service health checks**
+- [x] **Step 1: Write service health checks**
 
 ```yaml
 healthcheck:
@@ -30,7 +30,7 @@ healthcheck:
   retries: 5
 ```
 
-- [ ] **Step 2: Wire queue and scheduler containers**
+- [x] **Step 2: Wire queue and scheduler containers**
 
 ```yaml
 queue:
@@ -39,17 +39,17 @@ scheduler:
   command: php artisan schedule:work
 ```
 
-- [ ] **Step 3: Verify container startup order**
+- [x] **Step 3: Verify container startup order**
 
 ```bash
 docker compose up -d --build
 docker compose ps
 ```
 
-- [ ] **Step 4: Commit the ops stack**
+- [x] **Step 4: Commit the ops stack**
 
 ```bash
-git add docker-compose.yml docker .env.example
+git add docker-compose.yml docker/queue/entrypoint.sh docker/scheduler/entrypoint.sh .env.example config/queue.php config/cache.php
 git commit -m "feat: add operational docker services"
 ```
 
@@ -59,9 +59,9 @@ git commit -m "feat: add operational docker services"
 - Modify: `config/cache.php`
 - Modify: `config/session.php`
 - Modify: `.env.example`
-- Modify: `app/Http/Middleware/TrustProxies.php`
+- Modify: `phpunit.xml`
 
-- [ ] **Step 1: Write cache/session tests**
+- [x] **Step 1: Write cache/session tests**
 
 ```php
 public function test_cache_uses_redis_by_default(): void
@@ -75,7 +75,7 @@ public function test_memcached_store_is_available_for_hot_reads(): void
 }
 ```
 
-- [ ] **Step 2: Set the drivers**
+- [x] **Step 2: Set the drivers**
 
 ```php
 'default' => env('CACHE_STORE', 'redis'),
@@ -83,7 +83,7 @@ public function test_memcached_store_is_available_for_hot_reads(): void
 // Keep Memcached configured as a secondary store for fast, ephemeral lookups.
 ```
 
-- [ ] **Step 3: Verify the app survives restarts without losing local config**
+- [x] **Step 3: Verify the app survives restarts without losing local config**
 
 ```bash
 docker compose down
@@ -91,10 +91,10 @@ docker compose up -d
 docker compose exec app php artisan config:show cache.default
 ```
 
-- [ ] **Step 4: Commit the runtime settings**
+- [x] **Step 4: Commit the runtime settings**
 
 ```bash
-git add config/cache.php config/session.php .env.example app/Http/Middleware/TrustProxies.php
+git add config/cache.php config/session.php .env.example phpunit.xml
 git commit -m "feat: configure cache and session drivers"
 ```
 
@@ -104,10 +104,9 @@ git commit -m "feat: configure cache and session drivers"
 - Create: `app/Providers/TelescopeServiceProvider.php`
 - Modify: `config/telescope.php`
 - Modify: `routes/web.php`
-- Modify: `app/Http/Middleware/EnsureFrontendRequestsAreStateful.php` if needed
-- Modify: `config/app.php`
+- Modify: `phpunit.xml`
 
-- [ ] **Step 1: Write access-control tests**
+- [x] **Step 1: Write access-control tests**
 
 ```php
 public function test_telescope_is_not_exposed_in_production(): void
@@ -116,7 +115,7 @@ public function test_telescope_is_not_exposed_in_production(): void
 }
 ```
 
-- [ ] **Step 2: Restrict Telescope to local and development environments**
+- [x] **Step 2: Restrict Telescope to local and development environments**
 
 ```php
 if (! $this->app->environment(['local', 'development'])) {
@@ -124,15 +123,15 @@ if (! $this->app->environment(['local', 'development'])) {
 }
 ```
 
-- [ ] **Step 3: Verify Telescope is reachable only from the dev stack**
+- [x] **Step 3: Verify Telescope is reachable only from the dev stack**
 
 ```bash
 docker compose exec app php artisan telescope:status
 ```
 
-- [ ] **Step 4: Commit the observability controls**
+- [x] **Step 4: Commit the observability controls**
 
 ```bash
-git add app/Providers/TelescopeServiceProvider.php config/telescope.php routes/web.php
+git add app/Providers/TelescopeServiceProvider.php config/telescope.php phpunit.xml
 git commit -m "feat: secure telescope for local development"
 ```

@@ -30,7 +30,7 @@
         <env name="QUEUE_CONNECTION" value="redis"/>
         <env name="SESSION_DRIVER" value="redis"/>
         <env name="PULSE_ENABLED" value="false"/>
-        <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="TELESCOPE_ENABLED" value="true"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
     </php>
 </phpunit>
