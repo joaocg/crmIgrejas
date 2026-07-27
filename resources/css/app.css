@@ -202,15 +202,62 @@ a {
     display: grid;
     place-items: center;
     min-height: 100vh;
-    padding: 24px;
+    padding: 32px 24px;
+    background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.16), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.12), transparent 26%),
+        linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
 }
 
 .login-page__card {
-    width: min(460px, 100%);
+    width: min(520px, 100%);
     border: 1px solid var(--app-border);
     border-radius: 28px;
     background: var(--app-surface-strong);
     box-shadow: var(--app-shadow);
+}
+
+.login-page__brand {
+    display: grid;
+    gap: 10px;
+}
+
+.login-page__intro {
+    margin: 0;
+    color: var(--app-muted);
+    line-height: 1.6;
+}
+
+.login-page__form {
+    display: grid;
+    gap: 18px;
+}
+
+.login-page__field {
+    display: grid;
+    gap: 8px;
+}
+
+.login-page__field span {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--app-muted);
+}
+
+.login-page__control,
+.login-page__password {
+    width: 100%;
+}
+
+.login-page__password :is(.p-inputtext, input) {
+    width: 100%;
+}
+
+.login-page__submit {
+    width: 100%;
+    justify-content: center;
 }
 
 @media (max-width: 1024px) {
@@ -229,5 +276,9 @@ a {
 
     .surface-grid > * {
         grid-column: span 12;
+    }
+
+    .login-page {
+        padding: 16px;
     }
 }
