@@ -1,0 +1,43 @@
+table,normalized_target,key_fields,normalization_focus,notes
+person_per,persons,"per_ID, per_FirstName, per_LastName, per_fam_ID, per_Email, per_CellPhone, per_Gender, per_MembershipDate, per_DateEntered, per_DateLastEdited",identity and contact profile,Split into person, contact, and audit fields
+family_fam,families,"fam_ID, fam_Name, fam_Address1, fam_City, fam_State, fam_Zip, fam_Country, fam_Email, fam_WeddingDate, fam_DateEntered, fam_DateLastEdited",household and contact profile,Split address, household metadata, and audit fields
+autopayment_aut,auto_payments,"aut_ID, aut_FamID, aut_EnableBankDraft, aut_EnableCreditCard, aut_NextPayDate, aut_FYID, aut_Amount, aut_Interval, aut_Fund, aut_DateLastEdited",recurring giving,Keep payment transport details out of the main entity
+user_usr,users,"usr_per_ID, usr_UserName, usr_Password, usr_role_id, usr_Admin, usr_IsDeactivated, usr_jwt_secret, usr_jwt_token, usr_LastLogin",authentication and authorization,Legacy record mixes auth, permissions, and session state
+userconfig_ucfg,user_settings,"ucfg_per_id, ucfg_name, ucfg_value, ucfg_type, ucfg_choices_id, ucfg_permission, ucfg_cat",user preferences and toggles,Convert to typed user preferences
+config_cfg,settings,"cfg_name, cfg_value",application settings,Move to typed config/settings tables where needed
+group_grp,groups,"grp_ID, grp_Type, grp_Name, grp_Description, grp_DefaultRole, grp_active, grp_include_email_export",group metadata,Normalize role linkage and visibility flags
+person2group2role_p2g2r,group_memberships,"p2g2r_per_ID, p2g2r_grp_ID, p2g2r_rle_ID",many-to-many membership,Replace with explicit membership pivot
+group_manager_person,group_managers,"grp_mgr_per_person_ID, grp_mgr_per_group_ID",group leadership,Can collapse into membership role pivot
+events_event,events,"event_id, event_type, event_title, event_start, event_end, event_grpid, event_location, event_uid, event_creator_user_id",calendar events,Split event payload from sync metadata
+event_attend,event_attendances,"attend_id, event_id, person_id, checkin_date, checkout_date",attendance tracking,Normalize check-in and check-out timestamps
+pledge_plg,pledges,"plg_plgID, plg_FamID, plg_FYID, plg_date, plg_amount, plg_method, plg_fundID, plg_depID",pledges and payments,Separate pledge headers from payment receipts
+deposit_dep,deposits,"dep_ID, dep_Date, dep_Comment, dep_Closed, dep_Type, dep_Fund",deposit batches,Move closure and fund references into normalized batch model
+donationfund_fun,donation_funds,"fun_ID, fun_Name, fun_Description, fun_Active",fund catalog,Simple lookup table
+canvassdata_can,canvass_results,"can_ID, can_famID, can_Canvasser, can_FYID, can_date, can_Positive, can_Critical, can_Insightful, can_Financial, can_Suggestion, can_NotInterested, can_WhyNotInterested",stewardship canvass,Normalize to campaign and response tables
+note_nte,notes,"nte_ID, nte_per_ID, nte_fam_ID, nte_Title, nte_Text, nte_Type, nte_Private, nte_DateEntered",notes and commentary,Split note type and visibility
+pastoral_care,pastoral_care_records,"pst_cr_id, pst_cr_person_id, pst_cr_family_id, pst_cr_pastor_id, pst_cr_Type_id, pst_cr_visible, pst_cr_date",pastoral follow-up,Separate assignee, status, and note body
+gdpr_infos,gdpr_records,"gdpr_info_id, gdpr_info_About, gdpr_info_Name, gdpr_info_Type, gdpr_info_comment",privacy records,Track consent and privacy notices explicitly
+volunteeropportunity_vol,volunteer_opportunities,"vol_ID, vol_Name, vol_Description, vol_Active, vol_parent_ID, vol_managers",volunteer catalog,Split hierarchy and assignment tables
+person2volunteeropp_p2vo,volunteer_assignments,"p2vo_ID, p2vo_per_ID, p2vo_vol_ID",volunteer assignment pivot,Replace with person, opportunity pivot
+property_pro,properties,"pro_ID, pro_Class, pro_prt_ID, pro_Name, pro_Description, pro_Prompt",custom properties,Normalize property scope and constraints
+propertytype_prt,property_types,"prt_ID, prt_Class, prt_Name, prt_Description",property type lookup,Lookup table for property definitions
+record2property_r2p,record_properties,"r2p_id, r2p_pro_ID, r2p_record_ID, r2p_Value",property value assignments,Split by domain entity where possible
+list_lst,list_options,"lst_ID, lst_OptionID, lst_OptionSequence, lst_Type, lst_OptionName",legacy enumerations,Many domains depend on this lookup table
+addressbooks,address_books,"id, principaluri, displayname, uri, description, synctoken, groupId, volId",calendar/contact sync,Keep only if CalDAV/CardDAV compatibility remains required
+cards,contact_cards,"id, addressbookid, uri, carddata, personId, size, etag",contact sync,Potentially replace with pure contacts export
+collections,collections,"id, principaluri, ownerId, ownerPath",collection storage,Legacy shared collections
+collectionsinstances,collection_instances,"id, uri, collections_id, principaluri, guestId, guestPath, access, share_invitestatus",shared collection access,Legacy shared collection access
+principals,principals,"id, uri, email, displayname",principal identities,Legacy calendar/address book principal store
+tokens,api_tokens,"token, type, valid_until_date, reference_id, remainingUses, Comment",token registry,Audit security model before reusing
+tokens_password,password_tokens,"tok_pwd_ID, tok_pwd_token_ID, tok_pwd_must_change_PWD, tok_pwd_password, tok_pwd_ip",password reset tokens,Separate from session/auth tokens
+schedulingobjects,scheduling_objects,"id, principaluri, calendardata, uri, lastmodified, etag, size",calendar scheduling,Legacy CalDAV scheduling payloads
+calendarinstances,calendar_instances,"id, calendarid, principaluri, access, displayname, uri, description, calendarorder, calendarcolor, visible, present, timezone, transparent, share_href, share_displayname, share_invitestatus, grpid, cal_type",calendar ownership and visibility,Normalize if calendars remain in scope
+calendars,calendars,"id, synctoken, components",calendar container,Normalize to church calendars only if needed
+calendarsubscriptions,calendar_subscriptions,"id, uri, principaluri, source, displayname, refreshrate, calendarorder, calendarcolor, striptodos, stripalarms, stripattachments, lastmodified",calendar subscriptions,External subscription compatibility
+calendarchanges,calendar_changes,"id, uri, synctoken, calendarid, operation",calendar sync log,Sync bookkeeping only
+addressbookchanges,address_book_changes,"id, uri, synctoken, addressbookid, operation",address book sync log,Sync bookkeeping only
+egive_egv,egive_payments,"egv_ID, egv_egiveID, egv_famID, egv_DateEntered, egv_DateLastEdited, egv_EnteredBy, egv_EditedBy, egv_MoveDonations_Comment",electronic giving records,Normalize payment tracking from family identity
+fundraiser_fr,fundraisers,"fr_ID, fr_date, fr_title, fr_description, fr_EnteredBy, fr_EnteredDate",fundraiser events,Separate event metadata from donated items
+donateditem_di,donated_items,"di_ID, di_item, di_FR_ID, di_donor_ID, di_buyer_ID, di_multibuy, di_title, di_description, di_sellprice, di_estprice, di_minimum, di_materialvalue, di_EnteredBy, di_EnteredDate, di_picture",donated item catalog,Split item catalog from transaction state
+multibuy_mb,multibuy_items,"mb_ID, mb_per_ID, mb_item_ID, mb_count",bulk fundraiser item selection,Normalize to purchase line items
+paddlenum_pn,paddle_numbers,"pn_ID, pn_fr_ID, pn_Num, pn_per_ID",fundraiser paddle assignment,Keep as a derived relation if fundraiser stays in scope

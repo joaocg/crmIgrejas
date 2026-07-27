@@ -1,0 +1,76 @@
+table,php_name,domain,notes
+addressbooks,Addressbooks,calendar_sync,CalDAV address books and sharing metadata
+addressbookshare,Addressbookshare,calendar_sync,Sharing rules for address books
+addressbookchanges,Addressbookchanges,calendar_sync,Sync token tracking for address books
+calendarchanges,Calendarchanges,calendar_sync,Sync token tracking for calendars
+calendarinstances,Calendarinstances,calendar_sync,Calendar ownership and sharing metadata
+calendars,Calendars,calendar_sync,Calendar container records
+calendarsubscriptions,Calendarsubscriptions,calendar_sync,Subscribed calendar sources
+cards,Cards,calendar_sync,VCARD storage linked to address books
+collections,Collections,calendar_sync,Shared collection ownership
+collectionsinstances,Collectionsinstances,calendar_sync,Shared collection access instances
+principals,Principals,calendar_sync,Principal records for calendar and address book storage
+propertystorage,Propertystorage,calendar_sync,Property storage for CalDAV style data
+schedulingobjects,Schedulingobjects,calendar_sync,Scheduling objects for calendar workflows
+tokens,Token,calendar_sync,Shared token storage for calendar style integrations
+tokens_password,TokenPassword,calendar_sync,Password token storage
+version_ver,Version,system,Upgrade history for the legacy database
+person_per,Person,people,Primary person records and contact data
+person_custom,PersonCustom,people,Legacy custom values for persons
+person_custom_master,PersonCustomMaster,people,Definitions for person custom fields
+family_fam,Family,families,Primary family records and household data
+family_custom_master,FamilyCustomMaster,families,Definitions for family custom fields
+family_custom,FamilyCustom,families,Legacy custom values for families
+note_nte,Note,notes,Person and family notes
+note_nte_share,NoteShare,notes,Sharing records for notes
+config_cfg,Config,settings,General application settings
+user_usr,User,identity,Legacy user login and authorization record
+userrole_usrrol,UserRole,identity,Legacy role definitions for users
+userconfig_choices_ucfg_ch,UserConfigChoices,settings,Choices for user-specific settings
+userconfig_ucfg,UserConfig,settings,User-specific settings and preferences
+list_lst,ListOption,reference,Drop-down list values used across the legacy app
+list_icon,ListOptionIcon,reference,Icons associated with list options
+property_pro,Property,reference,Custom property definitions
+propertytype_prt,PropertyType,reference,Property type definitions
+record2property_r2p,Record2propertyR2p,reference,Property assignments to records
+group_grp,Group,groups,Primary group records
+group_type,GroupType,groups,Group type lookup table
+groupmembers,Groupmembers,groups,Legacy group membership helper table
+groupprop_master,GroupPropMaster,groups,Definitions for group-specific fields
+person2group2role_p2g2r,Person2Group2Role,groups,People, groups, and roles join table
+group_manager_person,GroupManagerPerson,groups,Group manager assignments
+volunteeropportunity_vol,VolunteerOpportunity,volunteers,Volunteer opportunity definitions
+person2volunteeropp_p2vo,Person2VolunteerOpportunity,volunteers,People to volunteer opportunity join table
+event_attend,EventAttend,events,Attendance records for events
+event_types,EventTypes,events,Event type lookup records
+eventcountnames_evctnm,EventCountName,events,Event counter labels
+eventcounts_evtcnt,EventCounts,events,Event counter values
+events_event,Event,events,Primary event records and calendar metadata
+autopayment_aut,AutoPayment,finance,Automatic payment pledges and card/bank data
+canvassdata_can,CanvassData,finance,Canvass results and financial outreach data
+deposit_dep,Deposit,finance,Deposit batches and closure state
+donationfund_fun,DonationFund,finance,Fund definitions
+egive_egv,Egive,finance,Electronic giving records
+pledge_plg,Pledge,finance,Pledges, payments, and related deposit links
+fundraiser_fr,FundRaiser,finance,Fundraiser definitions
+donateditem_di,DonatedItem,finance,Fundraiser donated items
+multibuy_mb,Multibuy,finance,Fundraiser bulk purchase records
+paddlenum_pn,PaddleNum,finance,Fundraiser paddle number records
+email_message_pending_emp,EmailMessagePending,communication,Pending outgoing email messages
+email_recipient_pending_erp,EmailRecipientPending,communication,Pending outgoing email recipients
+menu_links,MenuLink,ui,Dynamic menu link records
+ckeditor_templates,CKEditorTemplates,ui,Editor template records
+gdpr_infos,GdprInfo,privacy,GDPR consent and disclosure records
+pastoral_care,PastoralCare,pastoral,Pastoral care follow-up records
+pastoral_care_type,PastoralCareType,pastoral,Pastoral care type lookup
+kioskdevice_kdev,KioskDevice,kiosk,Registered kiosk devices
+kioskassginment_kasm,KioskAssignment,kiosk,Kiosk to person assignment records
+plugin,Plugin,plugins,Installed plugin registry
+plugin_dependencies,PluginDependencies,plugins,Plugin dependency map
+plugin_menu_bar,PluginMenuBar,plugins,Plugin menu registration
+plugin_user_role,PluginUserRole,plugins,Plugin access control by role
+send_news_letter_user_update,SendNewsLetterUserUpdate,communication,Newsletter delivery tracking
+query_qry,QueryQry,queries,Stored query definitions
+queryparameters_qrp,QueryParameters,queries,Stored query parameter sets
+queryparameteroptions_qpo,QueryParameterOptions,queries,Stored query parameter values
+result_res,ResultRes,queries,Query result authorizations
