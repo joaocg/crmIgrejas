@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        $this->call(LegacyDataSeeder::class);
+
         $tenantId = DB::table('tenants')->where('slug', 'default')->value('id');
 
         DB::table('roles')->updateOrInsert(
