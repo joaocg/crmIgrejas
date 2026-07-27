@@ -17,13 +17,14 @@
 </template>
 
 <script setup>
+import { t } from '../i18n';
 import AppSidebar from '../components/navigation/AppSidebar.vue';
 import AppTopbar from '../components/navigation/AppTopbar.vue';
 
 defineProps({
     title: {
         type: String,
-        default: 'Dashboard',
+        default: () => t('navigation.dashboard'),
     },
 });
 </script>

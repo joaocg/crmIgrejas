@@ -1,21 +1,21 @@
 <template>
-    <AppShell title="Edit user">
+    <AppShell :title="t('users.edit.title')">
         <PCard>
-            <template #title>Edit user</template>
+            <template #title>{{ t('users.edit.heading') }}</template>
             <template #content>
                 <form class="stack-form" @submit.prevent="submit">
-                    <BaseTextField v-model="form.name" label="Name" />
-                    <BaseTextField v-model="form.email" label="Email" type="email" />
-                    <BaseSelectField v-model="form.locale" label="Locale" :options="localeOptions" />
-                    <BaseSelectField v-model="form.active" label="Status" :options="statusOptions" />
+                    <BaseTextField v-model="form.name" :label="t('forms.name')" />
+                    <BaseTextField v-model="form.email" :label="t('forms.email')" type="email" />
+                    <BaseSelectField v-model="form.locale" :label="t('forms.locale.label')" :options="localeOptions" />
+                    <BaseSelectField v-model="form.active" :label="t('forms.status.label')" :options="statusOptions" />
 
                     <div v-if="message" style="color: var(--app-accent); font-weight: 600;">
                         {{ message }}
                     </div>
 
                     <div style="display: flex; gap: 12px;">
-                        <PButton type="submit" label="Update user" icon="pi pi-save" />
-                        <PButton label="Back" severity="secondary" text @click="$router.push('/users')" />
+                        <PButton type="submit" :label="t('forms.actions.update_user')" icon="pi pi-save" />
+                        <PButton :label="t('forms.actions.back')" severity="secondary" text @click="$router.push('/users')" />
                     </div>
                 </form>
             </template>
@@ -27,6 +27,7 @@
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
+import { t } from '../../../i18n';
 import AppShell from '../../../layouts/AppShell.vue';
 import BaseTextField from '../../../components/forms/BaseTextField.vue';
 import BaseSelectField from '../../../components/forms/BaseSelectField.vue';
@@ -42,13 +43,13 @@ const form = reactive({
 });
 
 const localeOptions = [
-    { label: 'Português (Brasil)', value: 'pt_BR' },
-    { label: 'English', value: 'en' },
+    { label: t('forms.locale.pt_br'), value: 'pt_BR' },
+    { label: t('forms.locale.en'), value: 'en' },
 ];
 
 const statusOptions = [
-    { label: 'Active', value: true },
-    { label: 'Inactive', value: false },
+    { label: t('forms.status.active'), value: true },
+    { label: t('forms.status.inactive'), value: false },
 ];
 
 onMounted(async () => {
@@ -56,16 +57,16 @@ onMounted(async () => {
         const response = await showUser(route.params.id);
         Object.assign(form, response.data);
     } catch {
-        message.value = 'Live user data requires authentication.';
+        message.value = t('forms.messages.auth_required_load');
     }
 });
 
 async function submit() {
     try {
         await updateUser(route.params.id, form);
-        message.value = 'User updated.';
+        message.value = t('forms.messages.updated');
     } catch {
-        message.value = 'Authentication required to update live records.';
+        message.value = t('forms.messages.auth_required_update');
     }
 }
 </script>

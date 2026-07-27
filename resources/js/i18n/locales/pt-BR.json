@@ -1,0 +1,117 @@
+{
+  "app": {
+    "brand": "crmIgrejas",
+    "subtitle": "CRM modular para igrejas"
+  },
+  "navigation": {
+    "dashboard": "Painel",
+    "users": "Usuários",
+    "login": "Entrar",
+    "module": "Módulo",
+    "private_space": "Espaço privado"
+  },
+  "dashboard": {
+    "eyebrow": "Bem-vindo de volta",
+    "title": "Um CRM de igreja limpo para fluxos complexos.",
+    "copy": "A nova interface foi criada para reduzir atrito, manter a navegação estável e suportar telas CRUD orientadas por módulos sem recarregar a página.",
+    "people": "Pessoas",
+    "modules": "Módulos",
+    "locale": "Idioma",
+    "subtitles": {
+      "people": "Registros ativos na base normalizada",
+      "modules": "Os módulos Core e Users já estão carregados",
+      "locale": "Idioma principal da experiência administrativa"
+    },
+    "recent_activity": "Atividade recente",
+    "columns": {
+      "name": "Nome",
+      "module": "Módulo",
+      "status": "Status"
+    },
+    "activity": {
+      "admin_user_updated": "Usuário administrador atualizado",
+      "system_locale_set": "Idioma do sistema definido",
+      "church_override_loaded": "Sobrescrita da igreja carregada"
+    },
+    "activity_status": {
+      "saved": "Salvo",
+      "ready": "Pronto",
+      "loaded": "Carregado"
+    },
+    "stats": {
+      "people": "1",
+      "modules": "2",
+      "locale": "pt_BR"
+    }
+  },
+  "users": {
+    "title": "Usuários",
+    "eyebrow": "Módulo",
+    "copy": "Este módulo é responsável pelas operações de cadastro, consulta, atualização e remoção por meio de uma API dedicada e páginas SPA.",
+    "registered": "Usuários cadastrados",
+    "columns": {
+      "name": "Nome",
+      "email": "E-mail",
+      "locale": "Idioma",
+      "active": "Ativo"
+    },
+    "create": {
+      "title": "Criar usuário",
+      "heading": "Criar usuário"
+    },
+    "edit": {
+      "title": "Editar usuário",
+      "heading": "Editar usuário"
+    },
+    "show": {
+      "title": "Detalhes do usuário",
+      "heading": "Detalhes do usuário"
+    },
+    "fallback_user": {
+      "name": "Usuário do sistema",
+      "email": "admin@church.local",
+      "locale": "pt_BR",
+      "active": true
+    }
+  },
+  "auth": {
+    "login": "Entrar",
+    "password": "Senha",
+    "email": "E-mail",
+    "title": "Acesso administrativo",
+    "subtitle": "Entre para recuperar sua sessão"
+  },
+  "forms": {
+    "search": "Pesquisar",
+    "search_placeholder": "Pesquisar pessoas, famílias, grupos",
+    "new_record": "Novo cadastro",
+    "name": "Nome",
+    "email": "E-mail",
+    "password": "Senha",
+    "locale": {
+      "label": "Idioma",
+      "placeholder": "Selecione um idioma",
+      "pt_br": "Português (Brasil)",
+      "en": "Inglês"
+    },
+    "status": {
+      "label": "Status",
+      "placeholder": "Selecione um status",
+      "active": "Ativo",
+      "inactive": "Inativo"
+    },
+    "actions": {
+      "save_user": "Salvar usuário",
+      "update_user": "Atualizar usuário",
+      "cancel": "Cancelar",
+      "back": "Voltar"
+    },
+    "messages": {
+      "saved": "Usuário salvo.",
+      "updated": "Usuário atualizado.",
+      "auth_required_create": "É necessário autenticação para criar registros reais.",
+      "auth_required_update": "É necessário autenticação para atualizar registros reais.",
+      "auth_required_load": "É necessário autenticação para carregar os dados reais."
+    }
+  }
+}

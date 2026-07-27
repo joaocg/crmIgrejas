@@ -1,17 +1,17 @@
 <template>
-    <AppShell title="User details">
+    <AppShell :title="t('users.show.title')">
         <PCard>
-            <template #title>User details</template>
+            <template #title>{{ t('users.show.heading') }}</template>
             <template #content>
                 <div v-if="message" style="margin-bottom: 16px; color: var(--app-accent); font-weight: 600;">
                     {{ message }}
                 </div>
 
                 <div class="stack-form">
-                    <div><strong>Name:</strong> {{ user.name }}</div>
-                    <div><strong>Email:</strong> {{ user.email }}</div>
-                    <div><strong>Locale:</strong> {{ user.locale }}</div>
-                    <div><strong>Status:</strong> {{ user.active ? 'Active' : 'Inactive' }}</div>
+                    <div><strong>{{ t('forms.name') }}:</strong> {{ user.name }}</div>
+                    <div><strong>{{ t('forms.email') }}:</strong> {{ user.email }}</div>
+                    <div><strong>{{ t('forms.locale.label') }}:</strong> {{ user.locale }}</div>
+                    <div><strong>{{ t('forms.status.label') }}:</strong> {{ user.active ? t('forms.status.active') : t('forms.status.inactive') }}</div>
                 </div>
             </template>
         </PCard>
@@ -22,6 +22,7 @@
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
+import { t } from '../../../i18n';
 import AppShell from '../../../layouts/AppShell.vue';
 import { showUser } from '../../../api/modules/users';
 
@@ -39,7 +40,7 @@ onMounted(async () => {
         const response = await showUser(route.params.id);
         Object.assign(user, response.data);
     } catch {
-        message.value = 'Live user data requires authentication.';
+        message.value = t('forms.messages.auth_required_load');
     }
 });
 </script>

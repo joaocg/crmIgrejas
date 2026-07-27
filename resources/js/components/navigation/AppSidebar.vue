@@ -27,11 +27,13 @@
 <script setup>
 import { RouterLink, useRoute } from 'vue-router';
 
+import { t } from '../../i18n';
+
 const route = useRoute();
 
 const items = [
-    { to: '/dashboard', label: 'Dashboard', icon: '⌂' },
-    { to: '/users', label: 'Users', icon: '◫', meta: 'CRUD' },
-    { to: '/login', label: 'Login', icon: '→' },
+    { to: '/dashboard', label: t('navigation.dashboard'), icon: '⌂' },
+    { to: '/users', label: t('navigation.users'), icon: '◫', meta: 'CRUD' },
+    { to: '/login', label: t('navigation.login'), icon: '→' },
 ];
 </script>
