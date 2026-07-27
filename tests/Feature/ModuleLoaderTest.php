@@ -18,5 +18,8 @@ class ModuleLoaderTest extends TestCase
         $this->assertContains('Events', $modules);
         $this->assertContains('Finance', $modules);
         $this->assertContains('Care', $modules);
+        $this->assertContains('Communications', $modules);
+        $this->assertContains('Calendar', $modules);
+        $this->assertContains('Kiosk', $modules);
     }
 }
