@@ -73,17 +73,22 @@ git commit -m "feat: add vue spa shell"
 - Create: `resources/js/components/tables/BaseDataTable.vue`
 - Create: `resources/js/styles/theme.css`
 - Modify: `resources/js/app.js`
+- Modify: `resources/js/layouts/AppShell.vue`
+- Modify: `resources/js/pages/DashboardPage.vue`
+- Modify: `routes/web.php`
+- Create: `tests/Feature/PrimeVueShellTest.php`
 
-- [ ] **Step 1: Write a layout regression test**
+- [x] **Step 1: Write a layout regression test**
 
 ```php
-public function test_dashboard_shell_shows_navigation(): void
+public function test_dashboard_and_login_routes_serve_the_spa_shell(): void
 {
-    $this->assertTrue(true);
+    $this->get('/dashboard')->assertOk()->assertSee('<div id="app"></div>', false);
+    $this->get('/login')->assertOk()->assertSee('<div id="app"></div>', false);
 }
 ```
 
-- [ ] **Step 2: Implement shared PrimeVue wrappers**
+- [x] **Step 2: Implement shared PrimeVue wrappers**
 
 ```vue
 <script setup>
@@ -94,13 +99,13 @@ defineProps({
 </script>
 ```
 
-- [ ] **Step 3: Verify the shell keeps CRUD affordances consistent**
+- [x] **Step 3: Verify the shell keeps CRUD affordances consistent**
 
 ```bash
-docker compose exec app npm run build
+docker run --rm -e HOME=/tmp -e npm_config_cache=/tmp/npm-cache -u $(id -u):$(id -g) -v /Volumes/nvme/Projetos/Joao/ecclesiacrm/crmIgrejas:/workspace -w /workspace node:22-bookworm npm run build
 ```
 
-- [ ] **Step 4: Commit the shell components**
+- [x] **Step 4: Commit the shell components**
 
 ```bash
 git add resources/js
