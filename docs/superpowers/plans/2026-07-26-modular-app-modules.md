@@ -133,7 +133,7 @@ if (file_exists($overridePath)) {
 }
 ```
 
-- [ ] **Step 3: Commit the override mechanism**
+- [x] **Step 3: Commit the override mechanism**
 
 ```bash
 git add app/Modules app/Support/Modules tests
