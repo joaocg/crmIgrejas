@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Events\Actions;
+
+use App\Models\Event;
+
+final class UpdateEventAction
+{
+    public function execute(Event $event, array $data): Event
+    {
+        $event->fill($data);
+        $event->save();
+
+        return $event->refresh();
+    }
+}
