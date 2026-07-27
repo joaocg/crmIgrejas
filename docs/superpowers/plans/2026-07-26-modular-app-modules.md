@@ -4,7 +4,7 @@
 
 **Goal:** Build a modular backend around `app/Modules` where each domain module owns its routes, actions, policies, views/API resources, and church-specific overrides.
 
-**Architecture:** The module system uses a small registry and a consistent folder contract rather than a heavy package manager. Each module exposes a public interface to the rest of the app, while custom church behavior lives in a nested namespace like `app/Modules/Users/{church_slug}` so overrides do not leak into core logic. Module, class, and table names should stay in English for consistency with Laravel conventions and long-term maintainability.
+**Architecture:** The module system uses a small registry and a consistent folder contract rather than a heavy package manager. Each module exposes a public interface to the rest of the app, while custom church behavior lives in a nested namespace like `app/Modules/Users/{church_slug}` so overrides do not leak into core logic. Module, class, and table names stay in English for consistency with Laravel conventions and long-term maintainability; the first bootstrap module is `Core`, not a localized alias.
 
 **Tech Stack:** Laravel service providers, PSR-4 autoloading, module manifests, route registration, policies, actions, Eloquent, PHPUnit.
 
@@ -16,10 +16,13 @@
 - Create: `app/Support/Modules/ModuleDefinition.php`
 - Create: `app/Support/Modules/ModuleRegistry.php`
 - Create: `app/Support/Modules/ModuleLoader.php`
+- Create: `app/Providers/ModuleServiceProvider.php`
+- Create: `app/Modules/Core/module.php`
+- Create: `app/Modules/Core/Providers/CoreModuleServiceProvider.php`
 - Modify: `bootstrap/providers.php`
 - Modify: `composer.json`
 
-- [ ] **Step 1: Write a module-loading test**
+- [x] **Step 1: Write a module-loading test**
 
 ```php
 public function test_module_registry_discovers_enabled_modules(): void
@@ -28,7 +31,7 @@ public function test_module_registry_discovers_enabled_modules(): void
 }
 ```
 
-- [ ] **Step 2: Implement the module definition**
+- [x] **Step 2: Implement the module definition**
 
 ```php
 final class ModuleDefinition
@@ -41,7 +44,7 @@ final class ModuleDefinition
 }
 ```
 
-- [ ] **Step 3: Register the loader in Laravel bootstrap**
+- [x] **Step 3: Register the loader in Laravel bootstrap**
 
 ```php
 return [
@@ -49,13 +52,13 @@ return [
 ];
 ```
 
-- [ ] **Step 4: Run the module discovery test**
+- [x] **Step 4: Run the module discovery test**
 
 ```bash
-docker compose exec app php artisan test --filter=Module -v
+docker compose run --rm app php artisan test --filter=ModuleLoaderTest
 ```
 
-- [ ] **Step 5: Commit the module loader**
+- [x] **Step 5: Commit the module loader**
 
 ```bash
 git add app/Support/Modules bootstrap/providers.php composer.json tests
@@ -65,7 +68,7 @@ git commit -m "feat: add module loader contract"
 ### Task 2: Create the first real module boundaries
 
 **Files:**
-- Create: `app/Modules/Nucleo/Providers/NucleoModuleServiceProvider.php`
+- Create: `app/Modules/Core/Providers/CoreModuleServiceProvider.php`
 - Create: `app/Modules/Users/Providers/UsersModuleServiceProvider.php`
 - Create: `app/Modules/Users/Routes/api.php`
 - Create: `app/Modules/Users/Actions/ListUsersAction.php`
