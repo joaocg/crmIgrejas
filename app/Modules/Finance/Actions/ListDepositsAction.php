@@ -8,9 +8,10 @@ use App\Models\Deposit;
 
 final class ListDepositsAction
 {
-    public function execute(): array
+    public function execute(int $tenantId): array
     {
         return Deposit::query()
+            ->where('tenant_id', $tenantId)
             ->with(['fund', 'enteredBy'])
             ->orderByDesc('date')
             ->get()

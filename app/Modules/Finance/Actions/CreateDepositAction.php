@@ -8,8 +8,11 @@ use App\Models\Deposit;
 
 final class CreateDepositAction
 {
-    public function execute(array $data): Deposit
+    public function execute(int $tenantId, array $data): Deposit
     {
-        return Deposit::create($data);
+        return Deposit::create([
+            ...$data,
+            'tenant_id' => $tenantId,
+        ]);
     }
 }

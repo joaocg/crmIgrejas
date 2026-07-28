@@ -8,9 +8,10 @@ use App\Models\Note;
 
 final class ListNotesAction
 {
-    public function execute(): array
+    public function execute(int $tenantId): array
     {
         return Note::query()
+            ->where('tenant_id', $tenantId)
             ->with(['person', 'family', 'editedBy'])
             ->latest('edited_at')
             ->get()

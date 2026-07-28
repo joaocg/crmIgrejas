@@ -8,8 +8,11 @@ use App\Models\Pledge;
 
 final class CreatePledgeAction
 {
-    public function execute(array $data): Pledge
+    public function execute(int $tenantId, array $data): Pledge
     {
-        return Pledge::create($data);
+        return Pledge::create([
+            ...$data,
+            'tenant_id' => $tenantId,
+        ]);
     }
 }

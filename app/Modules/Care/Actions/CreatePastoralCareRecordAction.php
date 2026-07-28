@@ -8,8 +8,11 @@ use App\Models\PastoralCareRecord;
 
 final class CreatePastoralCareRecordAction
 {
-    public function execute(array $data): PastoralCareRecord
+    public function execute(int $tenantId, array $data): PastoralCareRecord
     {
-        return PastoralCareRecord::create($data);
+        return PastoralCareRecord::create([
+            ...$data,
+            'tenant_id' => $tenantId,
+        ]);
     }
 }

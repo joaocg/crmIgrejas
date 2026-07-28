@@ -10,6 +10,7 @@ final class UpdateFamilyAction
 {
     public function execute(Family $family, array $data): Family
     {
+        unset($data['tenant_id']);
         $family->fill($data);
         $family->save();
 

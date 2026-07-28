@@ -8,9 +8,10 @@ use App\Models\DonationFund;
 
 final class ListDonationFundsAction
 {
-    public function execute(): array
+    public function execute(int $tenantId): array
     {
         return DonationFund::query()
+            ->where('tenant_id', $tenantId)
             ->orderBy('name')
             ->get()
             ->all();

@@ -11,21 +11,33 @@ use App\Modules\Finance\Actions\ListPledgesAction;
 use App\Modules\Finance\Actions\UpdatePledgeAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 final class PledgeController
 {
-    public function index(ListPledgesAction $action): JsonResponse
+    public function index(Request $request, ListPledgesAction $action): JsonResponse
     {
-        return response()->json($action->execute());
+        return response()->json($action->execute((int) $request->user()->tenant_id));
     }
 
     public function store(Request $request, CreatePledgeAction $action): JsonResponse
     {
         $validated = $request->validate([
-            'tenant_id' => ['required', 'integer', 'exists:tenants,id'],
-            'family_id' => ['required', 'integer', 'exists:families,id'],
-            'fund_id' => ['nullable', 'integer', 'exists:donation_funds,id'],
-            'deposit_id' => ['nullable', 'integer', 'exists:deposits,id'],
+            'family_id' => [
+                'required',
+                'integer',
+                Rule::exists('families', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
+            'fund_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('donation_funds', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
+            'deposit_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('deposits', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
             'fiscal_year' => ['nullable', 'integer'],
             'pledged_on' => ['nullable', 'date'],
             'amount' => ['required', 'numeric'],
@@ -38,21 +50,38 @@ final class PledgeController
             'payment_type' => ['nullable', 'string', 'max:32'],
         ]);
 
-        return response()->json($action->execute($validated), 201);
+        return response()->json($action->execute((int) $request->user()->tenant_id, $validated), 201);
     }
 
-    public function show(Pledge $pledge): JsonResponse
+    public function show(Request $request, Pledge $pledge): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $pledge);
+
         return response()->json($pledge->load(['family', 'fund', 'deposit']));
     }
 
     public function update(Request $request, Pledge $pledge, UpdatePledgeAction $action): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $pledge);
+
         $validated = $request->validate([
-            'tenant_id' => ['sometimes', 'integer', 'exists:tenants,id'],
-            'family_id' => ['sometimes', 'integer', 'exists:families,id'],
-            'fund_id' => ['sometimes', 'nullable', 'integer', 'exists:donation_funds,id'],
-            'deposit_id' => ['sometimes', 'nullable', 'integer', 'exists:deposits,id'],
+            'family_id' => [
+                'sometimes',
+                'integer',
+                Rule::exists('families', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
+            'fund_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('donation_funds', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
+            'deposit_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('deposits', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
             'fiscal_year' => ['sometimes', 'nullable', 'integer'],
             'pledged_on' => ['sometimes', 'nullable', 'date'],
             'amount' => ['sometimes', 'numeric'],
@@ -68,10 +97,17 @@ final class PledgeController
         return response()->json($action->execute($pledge, $validated));
     }
 
-    public function destroy(Pledge $pledge, DeletePledgeAction $action): JsonResponse
+    public function destroy(Request $request, Pledge $pledge, DeletePledgeAction $action): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $pledge);
+
         $action->execute($pledge);
 
         return response()->json([], 204);
+    }
+
+    private function authorizeTenantAccess(Request $request, Pledge $pledge): void
+    {
+        abort_unless((int) $pledge->tenant_id === (int) $request->user()->tenant_id, 404);
     }
 }

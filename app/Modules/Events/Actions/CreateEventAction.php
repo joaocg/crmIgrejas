@@ -8,8 +8,11 @@ use App\Models\Event;
 
 final class CreateEventAction
 {
-    public function execute(array $data): Event
+    public function execute(int $tenantId, array $data): Event
     {
-        return Event::create($data);
+        return Event::create([
+            ...$data,
+            'tenant_id' => $tenantId,
+        ]);
     }
 }

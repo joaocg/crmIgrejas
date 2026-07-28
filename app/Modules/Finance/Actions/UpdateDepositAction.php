@@ -10,6 +10,7 @@ final class UpdateDepositAction
 {
     public function execute(Deposit $deposit, array $data): Deposit
     {
+        unset($data['tenant_id']);
         $deposit->fill($data);
         $deposit->save();
 

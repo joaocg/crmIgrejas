@@ -8,9 +8,10 @@ use App\Models\Event;
 
 final class ListEventsAction
 {
-    public function execute(): array
+    public function execute(int $tenantId): array
     {
         return Event::query()
+            ->where('tenant_id', $tenantId)
             ->with(['group'])
             ->orderByDesc('starts_at')
             ->get()

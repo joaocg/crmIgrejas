@@ -10,6 +10,7 @@ final class UpdatePledgeAction
 {
     public function execute(Pledge $pledge, array $data): Pledge
     {
+        unset($data['tenant_id']);
         $pledge->fill($data);
         $pledge->save();
 

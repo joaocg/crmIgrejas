@@ -8,8 +8,11 @@ use App\Models\DonationFund;
 
 final class CreateDonationFundAction
 {
-    public function execute(array $data): DonationFund
+    public function execute(int $tenantId, array $data): DonationFund
     {
-        return DonationFund::create($data);
+        return DonationFund::create([
+            ...$data,
+            'tenant_id' => $tenantId,
+        ]);
     }
 }

@@ -10,6 +10,7 @@ final class UpdateDonationFundAction
 {
     public function execute(DonationFund $donationFund, array $data): DonationFund
     {
+        unset($data['tenant_id']);
         $donationFund->fill($data);
         $donationFund->save();
 

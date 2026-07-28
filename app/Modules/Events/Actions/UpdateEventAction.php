@@ -10,6 +10,7 @@ final class UpdateEventAction
 {
     public function execute(Event $event, array $data): Event
     {
+        unset($data['tenant_id']);
         $event->fill($data);
         $event->save();
 

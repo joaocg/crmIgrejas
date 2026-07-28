@@ -10,6 +10,7 @@ final class UpdatePersonAction
 {
     public function execute(Person $person, array $data): Person
     {
+        unset($data['tenant_id']);
         $person->fill($data);
         $person->save();
 

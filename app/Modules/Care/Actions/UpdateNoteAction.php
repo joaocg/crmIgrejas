@@ -10,6 +10,7 @@ final class UpdateNoteAction
 {
     public function execute(Note $note, array $data): Note
     {
+        unset($data['tenant_id']);
         $note->fill($data);
         $note->save();
 

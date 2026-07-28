@@ -8,9 +8,10 @@ use App\Models\Pledge;
 
 final class ListPledgesAction
 {
-    public function execute(): array
+    public function execute(int $tenantId): array
     {
         return Pledge::query()
+            ->where('tenant_id', $tenantId)
             ->with(['family', 'fund', 'deposit'])
             ->orderByDesc('pledged_on')
             ->get()

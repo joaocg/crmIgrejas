@@ -8,8 +8,11 @@ use App\Models\Note;
 
 final class CreateNoteAction
 {
-    public function execute(array $data): Note
+    public function execute(int $tenantId, array $data): Note
     {
-        return Note::create($data);
+        return Note::create([
+            ...$data,
+            'tenant_id' => $tenantId,
+        ]);
     }
 }

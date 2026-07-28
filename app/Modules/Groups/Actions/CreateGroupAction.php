@@ -8,8 +8,11 @@ use App\Models\Group;
 
 final class CreateGroupAction
 {
-    public function execute(array $data): Group
+    public function execute(int $tenantId, array $data): Group
     {
-        return Group::create($data);
+        return Group::create([
+            ...$data,
+            'tenant_id' => $tenantId,
+        ]);
     }
 }

@@ -8,9 +8,10 @@ use App\Models\Family;
 
 final class ListFamiliesAction
 {
-    public function execute(): array
+    public function execute(int $tenantId): array
     {
         return Family::query()
+            ->where('tenant_id', $tenantId)
             ->with(['address', 'people'])
             ->orderBy('name')
             ->get()

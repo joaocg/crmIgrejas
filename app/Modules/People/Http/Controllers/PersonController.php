@@ -11,20 +11,28 @@ use App\Modules\People\Actions\ListPeopleAction;
 use App\Modules\People\Actions\UpdatePersonAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 final class PersonController
 {
-    public function index(ListPeopleAction $action): JsonResponse
+    public function index(Request $request, ListPeopleAction $action): JsonResponse
     {
-        return response()->json($action->execute());
+        return response()->json($action->execute((int) $request->user()->tenant_id));
     }
 
     public function store(Request $request, CreatePersonAction $action): JsonResponse
     {
         $validated = $request->validate([
-            'tenant_id' => ['required', 'integer', 'exists:tenants,id'],
-            'family_id' => ['nullable', 'integer', 'exists:families,id'],
-            'address_id' => ['nullable', 'integer', 'exists:addresses,id'],
+            'family_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('families', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
+            'address_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('addresses', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
             'title' => ['nullable', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['nullable', 'string', 'max:255'],
@@ -38,20 +46,33 @@ final class PersonController
             'deactivated_at' => ['nullable', 'date'],
         ]);
 
-        return response()->json($action->execute($validated), 201);
+        return response()->json($action->execute((int) $request->user()->tenant_id, $validated), 201);
     }
 
-    public function show(Person $person): JsonResponse
+    public function show(Request $request, Person $person): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $person);
+
         return response()->json($person->load(['family', 'address', 'contacts']));
     }
 
     public function update(Request $request, Person $person, UpdatePersonAction $action): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $person);
+
         $validated = $request->validate([
-            'tenant_id' => ['sometimes', 'integer', 'exists:tenants,id'],
-            'family_id' => ['sometimes', 'nullable', 'integer', 'exists:families,id'],
-            'address_id' => ['sometimes', 'nullable', 'integer', 'exists:addresses,id'],
+            'family_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('families', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
+            'address_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('addresses', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
             'title' => ['sometimes', 'nullable', 'string', 'max:255'],
             'first_name' => ['sometimes', 'string', 'max:255'],
             'middle_name' => ['sometimes', 'nullable', 'string', 'max:255'],
@@ -68,10 +89,17 @@ final class PersonController
         return response()->json($action->execute($person, $validated));
     }
 
-    public function destroy(Person $person, DeletePersonAction $action): JsonResponse
+    public function destroy(Request $request, Person $person, DeletePersonAction $action): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $person);
+
         $action->execute($person);
 
         return response()->json([], 204);
+    }
+
+    private function authorizeTenantAccess(Request $request, Person $person): void
+    {
+        abort_unless((int) $person->tenant_id === (int) $request->user()->tenant_id, 404);
     }
 }

@@ -14,32 +14,34 @@ use Illuminate\Http\Request;
 
 final class DonationFundController
 {
-    public function index(ListDonationFundsAction $action): JsonResponse
+    public function index(Request $request, ListDonationFundsAction $action): JsonResponse
     {
-        return response()->json($action->execute());
+        return response()->json($action->execute((int) $request->user()->tenant_id));
     }
 
     public function store(Request $request, CreateDonationFundAction $action): JsonResponse
     {
         $validated = $request->validate([
-            'tenant_id' => ['required', 'integer', 'exists:tenants,id'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'active' => ['nullable', 'boolean'],
         ]);
 
-        return response()->json($action->execute($validated), 201);
+        return response()->json($action->execute((int) $request->user()->tenant_id, $validated), 201);
     }
 
-    public function show(DonationFund $donationFund): JsonResponse
+    public function show(Request $request, DonationFund $donationFund): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $donationFund);
+
         return response()->json($donationFund->load(['deposits', 'pledges']));
     }
 
     public function update(Request $request, DonationFund $donationFund, UpdateDonationFundAction $action): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $donationFund);
+
         $validated = $request->validate([
-            'tenant_id' => ['sometimes', 'integer', 'exists:tenants,id'],
             'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string'],
             'active' => ['sometimes', 'boolean'],
@@ -48,10 +50,17 @@ final class DonationFundController
         return response()->json($action->execute($donationFund, $validated));
     }
 
-    public function destroy(DonationFund $donationFund, DeleteDonationFundAction $action): JsonResponse
+    public function destroy(Request $request, DonationFund $donationFund, DeleteDonationFundAction $action): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $donationFund);
+
         $action->execute($donationFund);
 
         return response()->json([], 204);
+    }
+
+    private function authorizeTenantAccess(Request $request, DonationFund $donationFund): void
+    {
+        abort_unless((int) $donationFund->tenant_id === (int) $request->user()->tenant_id, 404);
     }
 }

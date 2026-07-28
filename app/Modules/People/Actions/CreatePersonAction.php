@@ -8,8 +8,11 @@ use App\Models\Person;
 
 final class CreatePersonAction
 {
-    public function execute(array $data): Person
+    public function execute(int $tenantId, array $data): Person
     {
-        return Person::create($data);
+        return Person::create([
+            ...$data,
+            'tenant_id' => $tenantId,
+        ]);
     }
 }

@@ -10,6 +10,7 @@ final class UpdateGroupAction
 {
     public function execute(Group $group, array $data): Group
     {
+        unset($data['tenant_id']);
         $group->fill($data);
         $group->save();
 

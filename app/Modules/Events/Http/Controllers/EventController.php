@@ -11,19 +11,23 @@ use App\Modules\Events\Actions\ListEventsAction;
 use App\Modules\Events\Actions\UpdateEventAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 final class EventController
 {
-    public function index(ListEventsAction $action): JsonResponse
+    public function index(Request $request, ListEventsAction $action): JsonResponse
     {
-        return response()->json($action->execute());
+        return response()->json($action->execute((int) $request->user()->tenant_id));
     }
 
     public function store(Request $request, CreateEventAction $action): JsonResponse
     {
         $validated = $request->validate([
-            'tenant_id' => ['required', 'integer', 'exists:tenants,id'],
-            'group_id' => ['nullable', 'integer', 'exists:groups,id'],
+            'group_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('groups', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'body' => ['nullable', 'string'],
@@ -37,19 +41,27 @@ final class EventController
             'is_active' => ['nullable', 'boolean'],
         ]);
 
-        return response()->json($action->execute($validated), 201);
+        return response()->json($action->execute((int) $request->user()->tenant_id, $validated), 201);
     }
 
-    public function show(Event $event): JsonResponse
+    public function show(Request $request, Event $event): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $event);
+
         return response()->json($event->load('attendances.person'));
     }
 
     public function update(Request $request, Event $event, UpdateEventAction $action): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $event);
+
         $validated = $request->validate([
-            'tenant_id' => ['sometimes', 'integer', 'exists:tenants,id'],
-            'group_id' => ['sometimes', 'nullable', 'integer', 'exists:groups,id'],
+            'group_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('groups', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
+            ],
             'title' => ['sometimes', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string'],
             'body' => ['sometimes', 'nullable', 'string'],
@@ -66,10 +78,17 @@ final class EventController
         return response()->json($action->execute($event, $validated));
     }
 
-    public function destroy(Event $event, DeleteEventAction $action): JsonResponse
+    public function destroy(Request $request, Event $event, DeleteEventAction $action): JsonResponse
     {
+        $this->authorizeTenantAccess($request, $event);
+
         $action->execute($event);
 
         return response()->json([], 204);
+    }
+
+    private function authorizeTenantAccess(Request $request, Event $event): void
+    {
+        abort_unless((int) $event->tenant_id === (int) $request->user()->tenant_id, 404);
     }
 }

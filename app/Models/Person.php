@@ -13,6 +13,8 @@ final class Person extends Model
 {
     use HasFactory;
 
+    protected $table = 'persons';
+
     protected $fillable = [
         'tenant_id',
         'family_id',
