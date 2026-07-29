@@ -17,6 +17,17 @@ final class PersonResource extends JsonResource
     public const PRIVATE_DATA_ABILITY = 'people.private_data.view';
 
     /**
+     * Single source of truth for the relations this resource reads via
+     * whenLoaded(). Every call site that hydrates a Person for this resource
+     * (list query, store/show/update loads) must eager-load exactly this set,
+     * or a relation silently disappears from the JSON instead of appearing
+     * as null/[] — see PeoplePrivacyTest for the regression this guards.
+     *
+     * @var array<int, string>
+     */
+    public const RELATIONS = ['family', 'address', 'contacts'];
+
+    /**
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array

@@ -27,19 +27,19 @@ final class PersonController
     {
         $person = $action->execute($request->validated());
 
-        return PersonResource::make($person->load(['family', 'address', 'contacts']));
+        return PersonResource::make($person->load(PersonResource::RELATIONS));
     }
 
     public function show(Person $person): PersonResource
     {
-        return PersonResource::make($person->load(['family', 'address', 'contacts']));
+        return PersonResource::make($person->load(PersonResource::RELATIONS));
     }
 
     public function update(UpdatePersonRequest $request, Person $person, UpdatePersonAction $action): PersonResource
     {
         $person = $action->execute($person, $request->validated());
 
-        return PersonResource::make($person->load(['family', 'address', 'contacts']));
+        return PersonResource::make($person->load(PersonResource::RELATIONS));
     }
 
     public function destroy(Person $person, DeletePersonAction $action): JsonResponse
