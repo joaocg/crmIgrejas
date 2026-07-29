@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\Person;
+use App\Models\Role;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -106,8 +107,18 @@ class PeoplePaginationTest extends TestCase
         $tenant->active = true;
         $tenant->save();
 
+        $role = Role::create([
+            'tenant_id' => $tenant->id,
+            'slug' => 'admin',
+            'name' => 'Admin',
+            'permissions' => ['*' => true],
+            'is_system' => false,
+            'active' => true,
+        ]);
+
         $user = User::factory()->create([
             'tenant_id' => $tenant->id,
+            'role_id' => $role->id,
             'email' => 'admin+'.uniqid().'@church.local',
             'password' => 'password',
             'active' => true,
