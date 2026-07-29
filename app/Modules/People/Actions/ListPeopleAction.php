@@ -11,21 +11,46 @@ use Illuminate\Database\Eloquent\Builder;
 
 final class ListPeopleAction
 {
+    private const LIKE_ESCAPE_CHARACTER = '\\';
+
     public function execute(ListPeopleRequest $request): LengthAwarePaginator
     {
-        return Person::query()
+        $sortColumn = $request->sortColumn();
+
+        $query = Person::query()
             ->with(['family', 'address'])
             ->when(
                 $request->searchTerm(),
                 fn (Builder $query, string $term): Builder => $query->where(
                     fn (Builder $inner): Builder => $inner
-                        ->where('first_name', 'like', '%'.$term.'%')
-                        ->orWhere('last_name', 'like', '%'.$term.'%')
+                        ->whereRaw(
+                            'first_name LIKE ? ESCAPE ?',
+                            ['%'.$this->escapeLikeTerm($term).'%', self::LIKE_ESCAPE_CHARACTER]
+                        )
+                        ->orWhereRaw(
+                            'last_name LIKE ? ESCAPE ?',
+                            ['%'.$this->escapeLikeTerm($term).'%', self::LIKE_ESCAPE_CHARACTER]
+                        )
                 ),
             )
-            ->orderBy($request->sortColumn(), $request->sortDirection())
+            ->orderBy($sortColumn, $request->sortDirection());
+
+        if ($sortColumn !== 'first_name') {
+            $query->orderBy('first_name');
+        }
+
+        return $query
             ->orderBy('id')
             ->paginate($request->perPage())
             ->withQueryString();
+    }
+
+    private function escapeLikeTerm(string $term): string
+    {
+        return strtr($term, [
+            self::LIKE_ESCAPE_CHARACTER => self::LIKE_ESCAPE_CHARACTER.self::LIKE_ESCAPE_CHARACTER,
+            '%' => self::LIKE_ESCAPE_CHARACTER.'%',
+            '_' => self::LIKE_ESCAPE_CHARACTER.'_',
+        ]);
     }
 }

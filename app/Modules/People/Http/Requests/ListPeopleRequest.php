@@ -13,7 +13,7 @@ final class ListPeopleRequest extends IndexRequest
      */
     protected function sortableColumns(): array
     {
-        return ['first_name', 'last_name', 'birth_date', 'membership_date', 'created_at'];
+        return ['first_name', 'last_name', 'created_at', 'updated_at'];
     }
 
     protected function defaultSort(): string

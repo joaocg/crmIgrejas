@@ -30,7 +30,8 @@ class PeoplePaginationTest extends TestCase
             ->assertJsonCount(10, 'data')
             ->assertJsonPath('meta.total', 30)
             ->assertJsonPath('meta.per_page', 10)
-            ->assertJsonPath('meta.current_page', 1);
+            ->assertJsonPath('meta.current_page', 1)
+            ->assertJsonPath('meta.last_page', 3);
 
         $this->assertSame($user->tenant_id, Person::query()->first()->tenant_id);
     }
@@ -46,6 +47,19 @@ class PeoplePaginationTest extends TestCase
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.first_name', 'Joao');
+    }
+
+    public function test_index_search_term_does_not_treat_underscore_as_a_wildcard(): void
+    {
+        $this->authenticate();
+
+        Person::create(['first_name' => 'Joao', 'last_name' => 'Coelho']);
+        Person::create(['first_name' => 'Jo_o', 'last_name' => 'Wildcard']);
+
+        $this->getJson('/api/people?search=Jo_o')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.first_name', 'Jo_o');
     }
 
     public function test_index_sorts_by_an_allowed_column_in_both_directions(): void
