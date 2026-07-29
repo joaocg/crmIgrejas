@@ -6,7 +6,6 @@ namespace App\Modules\People\Actions;
 
 use App\Models\Person;
 use App\Modules\People\Http\Requests\ListPeopleRequest;
-use App\Modules\People\Http\Resources\PersonResource;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -19,7 +18,7 @@ final class ListPeopleAction
         $sortColumn = $request->sortColumn();
 
         $query = Person::query()
-            ->with(PersonResource::RELATIONS)
+            ->with(Person::API_RELATIONS)
             ->when(
                 $request->searchTerm(),
                 fn (Builder $query, string $term): Builder => $query->where(

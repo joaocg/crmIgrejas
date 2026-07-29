@@ -14,6 +14,17 @@ final class Person extends Model
 {
     use BelongsToTenant, HasFactory;
 
+    /**
+     * Single source of truth for the relations PersonResource reads via
+     * whenLoaded(). Every call site that hydrates a Person for that resource
+     * (list query, store/show/update loads) must eager-load exactly this set,
+     * or a relation silently disappears from the JSON instead of appearing
+     * as null/[] — see PeoplePrivacyTest for the regression this guards.
+     *
+     * @var array<int, string>
+     */
+    public const API_RELATIONS = ['family', 'address', 'contacts'];
+
     protected $table = 'persons';
 
     protected $fillable = [
