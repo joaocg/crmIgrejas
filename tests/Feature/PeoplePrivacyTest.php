@@ -49,6 +49,29 @@ class PeoplePrivacyTest extends TestCase
             ->assertJsonValidationErrors('first_name');
     }
 
+    public function test_index_contacts_key_is_present_and_empty_without_the_permission(): void
+    {
+        $this->personForUserWithPermissions(['navigation.people' => true]);
+
+        $this->getJson('/api/people')
+            ->assertOk()
+            ->assertJsonStructure(['data' => [['contacts']]])
+            ->assertJsonPath('data.0.contacts', []);
+    }
+
+    public function test_index_contacts_key_is_present_and_populated_with_the_permission(): void
+    {
+        $this->personForUserWithPermissions([
+            'navigation.people' => true,
+            'people.private_data.view' => true,
+        ]);
+
+        $this->getJson('/api/people')
+            ->assertOk()
+            ->assertJsonStructure(['data' => [['contacts']]])
+            ->assertJsonPath('data.0.contacts.0.value', 'joao@example.com');
+    }
+
     /**
      * @param  array<string, bool>  $permissions
      */

@@ -18,7 +18,7 @@ final class ListPeopleAction
         $sortColumn = $request->sortColumn();
 
         $query = Person::query()
-            ->with(['family', 'address'])
+            ->with(['family', 'address', 'contacts'])
             ->when(
                 $request->searchTerm(),
                 fn (Builder $query, string $term): Builder => $query->where(

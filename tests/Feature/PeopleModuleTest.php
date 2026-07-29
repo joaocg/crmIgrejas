@@ -80,6 +80,29 @@ class PeopleModuleTest extends TestCase
             ->assertJsonPath('data.contacts.0.value', 'joao@example.com');
     }
 
+    public function test_update_accepts_a_partial_payload_and_rejects_an_invalid_present_field(): void
+    {
+        $tenant = $this->createTenant('default');
+        $user = $this->createUser($tenant->id);
+        $person = Person::create([
+            'tenant_id' => $tenant->id,
+            'first_name' => 'Joao',
+            'last_name' => 'Coelho',
+        ]);
+
+        $this->actingAs($user, 'sanctum')
+            ->patchJson("/api/people/{$person->id}", ['title' => 'Pastor'])
+            ->assertOk()
+            ->assertJsonPath('data.title', 'Pastor')
+            ->assertJsonPath('data.first_name', 'Joao')
+            ->assertJsonPath('data.last_name', 'Coelho');
+
+        $this->actingAs($user, 'sanctum')
+            ->patchJson("/api/people/{$person->id}", ['gender' => 'not-an-integer'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('gender');
+    }
+
     private function createTenant(string $slug): Tenant
     {
         $tenant = new Tenant;
