@@ -14,39 +14,42 @@ class LegacyDataImporter
         $this->ensureLegacyConnectionExists($connectionName);
 
         $tenantId = $this->ensureDefaultTenant();
-        $adminRoleId = $this->ensureAdminRole($tenantId);
-        $this->ensureAdminUser($tenantId, $adminRoleId);
 
-        $counts = [
-            'families' => 0,
-            'persons' => 0,
-        ];
+        return app(\App\Support\Tenancy\TenantContext::class)->runAs($tenantId, function () use ($connectionName, $batchSize, $tenantId): array {
+            $adminRoleId = $this->ensureAdminRole($tenantId);
+            $this->ensureAdminUser($tenantId, $adminRoleId);
 
-        $legacy = DB::connection($connectionName);
+            $counts = [
+                'families' => 0,
+                'persons' => 0,
+            ];
 
-        if (Schema::connection($connectionName)->hasTable('family_fam')) {
-            $legacy->table('family_fam')
-                ->orderBy('fam_ID')
-                ->chunk($batchSize, function ($rows) use ($tenantId, &$counts) {
-                    foreach ($rows as $row) {
-                        $this->importFamily($tenantId, $row);
-                        $counts['families']++;
-                    }
-                });
-        }
+            $legacy = DB::connection($connectionName);
 
-        if (Schema::connection($connectionName)->hasTable('person_per')) {
-            $legacy->table('person_per')
-                ->orderBy('per_ID')
-                ->chunk($batchSize, function ($rows) use ($tenantId, $connectionName, &$counts) {
-                    foreach ($rows as $row) {
-                        $this->importPerson($tenantId, $connectionName, $row);
-                        $counts['persons']++;
-                    }
-                });
-        }
+            if (Schema::connection($connectionName)->hasTable('family_fam')) {
+                $legacy->table('family_fam')
+                    ->orderBy('fam_ID')
+                    ->chunk($batchSize, function ($rows) use ($tenantId, &$counts) {
+                        foreach ($rows as $row) {
+                            $this->importFamily($tenantId, $row);
+                            $counts['families']++;
+                        }
+                    });
+            }
 
-        return $counts;
+            if (Schema::connection($connectionName)->hasTable('person_per')) {
+                $legacy->table('person_per')
+                    ->orderBy('per_ID')
+                    ->chunk($batchSize, function ($rows) use ($tenantId, $connectionName, &$counts) {
+                        foreach ($rows as $row) {
+                            $this->importPerson($tenantId, $connectionName, $row);
+                            $counts['persons']++;
+                        }
+                    });
+            }
+
+            return $counts;
+        });
     }
 
     protected function ensureLegacyConnectionExists(string $connectionName): void
