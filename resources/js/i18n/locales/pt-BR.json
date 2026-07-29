@@ -126,7 +126,9 @@
       "first_name": "Maria",
       "last_name": "Silva",
       "birth_date": "1990-01-01"
-    }
+    },
+    "private_data": "Dado privado",
+    "private_data_notice": "Você não tem permissão para ver endereço, telefone e e-mail."
   },
   "families": {
     "title": "Famílias",
