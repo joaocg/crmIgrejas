@@ -70,7 +70,6 @@ Hoje o filtro `tenant_id` é repetido à mão em cada action e cada `Rule::exist
 - Create: `app/Support/Tenancy/BelongsToTenant.php`
 - Modify: `app/Models/Person.php`, `app/Models/Family.php`, `app/Models/Address.php`, `app/Models/Contact.php`, `app/Models/Group.php`, `app/Models/GroupMembership.php`, `app/Models/Event.php`, `app/Models/EventAttendance.php`, `app/Models/Note.php`, `app/Models/PastoralCareRecord.php`, `app/Models/DonationFund.php`, `app/Models/Deposit.php`, `app/Models/Pledge.php`
 - Modify: `app/Support/Legacy/LegacyDataImporter.php`
-- Modify: `database/seeders/LegacyDataSeeder.php`
 - Test: `tests/Feature/Tenancy/GlobalTenantScopeTest.php`
 
 **Interfaces:**
@@ -351,7 +350,7 @@ return app(\App\Support\Tenancy\TenantContext::class)->runAs($tenantId, function
 });
 ```
 
-Em `database/seeders/LegacyDataSeeder.php`, aplicar o mesmo envelope `runAs()` em torno da criação de registros de domínio.
+`database/seeders/LegacyDataSeeder.php` **não é modificado.** (Corrigido em 2026-07-29, durante a execução: o plano original mandava envelopar o seeder também, o que não é implementável — o seeder é um delegador de 10 linhas que apenas chama `import('legacy')`, e não tem um `$tenantId` para passar a `runAs()`, porque o tenant é resolvido dentro de `ensureDefaultTenant()`, já sob o envelope do importador. Envolvê-lo produziria um `runAs()` aninhado sem argumento válido.)
 
 - [ ] **Step 7: Rodar todos os testes**
 
