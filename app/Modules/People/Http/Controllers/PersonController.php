@@ -9,15 +9,17 @@ use App\Modules\People\Actions\CreatePersonAction;
 use App\Modules\People\Actions\DeletePersonAction;
 use App\Modules\People\Actions\ListPeopleAction;
 use App\Modules\People\Actions\UpdatePersonAction;
+use App\Modules\People\Http\Requests\ListPeopleRequest;
+use App\Support\Http\Resources\PaginatedCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 final class PersonController
 {
-    public function index(Request $request, ListPeopleAction $action): JsonResponse
+    public function index(ListPeopleRequest $request, ListPeopleAction $action): JsonResponse
     {
-        return response()->json($action->execute((int) $request->user()->tenant_id));
+        return response()->json(PaginatedCollection::envelope($action->execute($request)));
     }
 
     public function store(Request $request, CreatePersonAction $action): JsonResponse

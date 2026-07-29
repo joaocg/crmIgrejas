@@ -58,8 +58,8 @@ class PeopleModuleTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonCount(1)
-            ->assertJsonPath('0.id', $person->id);
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $person->id);
 
         $this->actingAs($user, 'sanctum')
             ->postJson('/api/people', [
