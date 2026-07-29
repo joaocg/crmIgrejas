@@ -28,6 +28,13 @@ class FamiliesModuleTest extends TestCase
             'tenant_id' => $tenant->id,
             'name' => 'Family One',
         ]);
+        $family->contacts()->create([
+            'tenant_id' => $tenant->id,
+            'type' => 'mobile_phone',
+            'label' => 'Mobile phone',
+            'value' => '(85) 98888-0000',
+            'is_primary' => true,
+        ]);
 
         $otherFamily = Family::create([
             'tenant_id' => $otherTenant->id,
@@ -58,6 +65,11 @@ class FamiliesModuleTest extends TestCase
         $this->actingAs($user, 'sanctum')
             ->getJson("/api/families/{$otherFamily->id}")
             ->assertNotFound();
+
+        $this->actingAs($user, 'sanctum')
+            ->getJson("/api/families/{$family->id}")
+            ->assertOk()
+            ->assertJsonPath('contacts.0.value', '(85) 98888-0000');
     }
 
     private function createTenant(string $slug): Tenant

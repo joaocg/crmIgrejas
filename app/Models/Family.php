@@ -52,4 +52,9 @@ final class Family extends Model
     {
         return $this->hasMany(Person::class);
     }
+
+    public function contacts(): HasMany
+    {
+        return $this->hasMany(Contact::class);
+    }
 }

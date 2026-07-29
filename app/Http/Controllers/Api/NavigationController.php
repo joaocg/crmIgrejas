@@ -6,37 +6,67 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 final class NavigationController extends Controller
 {
-    public function __invoke(): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
-        return response()->json([
-            'sections' => [
-                [
-                    'key' => 'main',
-                    'label' => 'Menu principal',
-                    'items' => [
-                        ['key' => 'dashboard', 'route' => '/dashboard', 'label' => 'Painel', 'icon' => '⌂'],
-                        ['key' => 'users', 'route' => '/users', 'label' => 'Usuários', 'icon' => '◫', 'meta' => 'CRUD'],
-                        ['key' => 'people', 'route' => '/people', 'label' => 'Pessoas', 'icon' => '◉', 'meta' => 'CRUD'],
-                        ['key' => 'families', 'route' => '/families', 'label' => 'Famílias', 'icon' => '◔', 'meta' => 'CRUD'],
-                        ['key' => 'groups', 'route' => '/groups', 'label' => 'Grupos', 'icon' => '◑', 'meta' => 'CRUD'],
-                        ['key' => 'events', 'route' => '/events', 'label' => 'Eventos', 'icon' => '◒', 'meta' => 'CRUD'],
-                    ],
-                ],
-                [
-                    'key' => 'tools',
-                    'label' => 'Ferramentas',
-                    'items' => [
-                        ['key' => 'communications', 'route' => '/communications', 'label' => 'Comunicação', 'icon' => '✉'],
-                        ['key' => 'care', 'route' => '/care', 'label' => 'Intercessão', 'icon' => '✚'],
-                        ['key' => 'repertoire', 'route' => '/repertoire', 'label' => 'Repertório', 'icon' => '♫'],
-                        ['key' => 'manuals', 'route' => '/manuals', 'label' => 'Manuais', 'icon' => '▣'],
-                        ['key' => 'whatsapp', 'route' => '/settings/integrations/whatsapp', 'label' => 'WhatsApp', 'icon' => '☏'],
-                    ],
+        $permissions = $request->user()?->role?->permissions ?? ['*' => true];
+
+        $sections = [
+            [
+                'key' => 'main',
+                'labelKey' => 'navigation.main',
+                'items' => [
+                    ['key' => 'dashboard', 'route' => '/dashboard', 'labelKey' => 'navigation.dashboard', 'icon' => '⌂'],
+                    ['key' => 'users', 'route' => '/users', 'labelKey' => 'navigation.users', 'icon' => '◫', 'meta' => 'CRUD', 'ability' => 'navigation.users'],
+                    ['key' => 'people', 'route' => '/people', 'labelKey' => 'navigation.people', 'icon' => '◉', 'meta' => 'CRUD', 'ability' => 'navigation.people'],
+                    ['key' => 'families', 'route' => '/families', 'labelKey' => 'navigation.families', 'icon' => '◔', 'meta' => 'CRUD', 'ability' => 'navigation.families'],
+                    ['key' => 'groups', 'route' => '/groups', 'labelKey' => 'navigation.groups', 'icon' => '◑', 'meta' => 'CRUD', 'ability' => 'navigation.groups'],
+                    ['key' => 'events', 'route' => '/events', 'labelKey' => 'navigation.events', 'icon' => '◒', 'meta' => 'CRUD', 'ability' => 'navigation.events'],
                 ],
             ],
+            [
+                'key' => 'tools',
+                'labelKey' => 'navigation.tools',
+                'items' => [
+                    ['key' => 'communications', 'route' => '/communications', 'labelKey' => 'navigation.communications', 'icon' => '✉', 'ability' => 'navigation.communications'],
+                    ['key' => 'care', 'route' => '/care', 'labelKey' => 'navigation.care', 'icon' => '✚', 'ability' => 'navigation.care'],
+                    ['key' => 'finance', 'route' => '/finance', 'labelKey' => 'navigation.finance', 'icon' => '¤', 'ability' => 'navigation.finance'],
+                    ['key' => 'calendar', 'route' => '/calendar', 'labelKey' => 'navigation.calendar', 'icon' => '◷', 'ability' => 'navigation.calendar'],
+                    ['key' => 'kiosk', 'route' => '/kiosk', 'labelKey' => 'navigation.kiosk', 'icon' => '▣', 'ability' => 'navigation.kiosk'],
+                    ['key' => 'repertoire', 'route' => '/repertoire', 'labelKey' => 'navigation.repertoire', 'icon' => '♫', 'ability' => 'navigation.repertoire'],
+                    ['key' => 'manuals', 'route' => '/manuals', 'labelKey' => 'navigation.manuals', 'icon' => '▣', 'ability' => 'navigation.manuals'],
+                    ['key' => 'whatsapp', 'route' => '/settings/integrations/whatsapp', 'labelKey' => 'navigation.whatsapp', 'icon' => '☏', 'ability' => 'navigation.whatsapp'],
+                ],
+            ],
+        ];
+
+        $filteredSections = array_values(array_filter(array_map(function (array $section) use ($permissions): ?array {
+            $items = array_values(array_filter($section['items'], function (array $item) use ($permissions): bool {
+                if (($item['ability'] ?? null) === null) {
+                    return true;
+                }
+
+                if (($permissions['*'] ?? false) === true) {
+                    return true;
+                }
+
+                return ($permissions[$item['ability']] ?? false) === true;
+            }));
+
+            if ($items === []) {
+                return null;
+            }
+
+            $section['items'] = $items;
+
+            return $section;
+        }, $sections)));
+
+        return response()->json([
+            'sections' => $filteredSections,
         ]);
     }
 }

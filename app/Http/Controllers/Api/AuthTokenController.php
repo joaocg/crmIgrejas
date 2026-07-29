@@ -34,6 +34,7 @@ class AuthTokenController extends Controller
             ]);
         }
 
+        $user->loadMissing('role');
         $token = $user->createToken('spa')->plainTextToken;
 
         return response()->json([

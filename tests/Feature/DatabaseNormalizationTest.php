@@ -18,6 +18,7 @@ class DatabaseNormalizationTest extends TestCase
         $this->assertTrue(Schema::hasColumns('addresses', ['tenant_id', 'line1', 'city', 'country']));
         $this->assertTrue(Schema::hasColumns('families', ['tenant_id', 'address_id', 'name']));
         $this->assertTrue(Schema::hasColumns('persons', ['tenant_id', 'family_id', 'address_id', 'first_name', 'last_name']));
+        $this->assertTrue(Schema::hasColumns('contacts', ['tenant_id', 'person_id', 'family_id', 'type', 'value']));
         $this->assertTrue(Schema::hasColumns('module_definitions', ['slug', 'name', 'is_core', 'is_enabled']));
         $this->assertTrue(Schema::hasColumns('module_settings', ['tenant_id', 'module_definition_id', 'key', 'value']));
         $this->assertTrue(Schema::hasColumns('groups', ['tenant_id', 'role_id', 'name', 'is_active']));

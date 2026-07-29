@@ -9,34 +9,40 @@
         </div>
 
         <nav class="app-nav">
-            <RouterLink
-                v-for="item in items"
-                :key="item.to"
-                :to="item.to"
-                class="app-nav__item"
-                :class="{ 'is-active': route.path === item.to }"
-            >
-                <span class="app-nav__icon">{{ item.icon }}</span>
-                <span>{{ item.label }}</span>
-                <span class="app-nav__meta" v-if="item.meta">{{ item.meta }}</span>
-            </RouterLink>
+            <section v-for="section in sections" :key="section.key" class="app-nav__section">
+                <div class="app-nav__section-title">{{ t(section.labelKey) }}</div>
+                <RouterLink
+                    v-for="item in section.items"
+                    :key="item.key"
+                    :to="item.route"
+                    class="app-nav__item"
+                    :class="{ 'is-active': route.path === item.route }"
+                >
+                    <span class="app-nav__icon">{{ item.icon }}</span>
+                    <span>{{ t(item.labelKey) }}</span>
+                    <span class="app-nav__meta" v-if="item.meta">{{ item.meta }}</span>
+                </RouterLink>
+            </section>
         </nav>
     </aside>
 </template>
 
 <script setup>
+import { computed, onMounted } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 
 import { t } from '../../i18n';
+import { useAuthStore } from '../../stores/auth';
+import { useNavigationStore } from '../../stores/navigation';
 
 const route = useRoute();
+const auth = useAuthStore();
+const navigation = useNavigationStore();
+const sections = computed(() => navigation.currentSections);
 
-const items = [
-    { to: '/dashboard', label: t('navigation.dashboard'), icon: '⌂' },
-    { to: '/users', label: t('navigation.users'), icon: '◫', meta: 'CRUD' },
-    { to: '/people', label: t('navigation.people'), icon: '◉', meta: 'CRUD' },
-    { to: '/families', label: t('navigation.families'), icon: '◔', meta: 'CRUD' },
-    { to: '/groups', label: t('navigation.groups'), icon: '◑', meta: 'CRUD' },
-    { to: '/login', label: t('navigation.login'), icon: '→' },
-];
+onMounted(async () => {
+    if (auth.isAuthenticated) {
+        await navigation.load();
+    }
+});
 </script>

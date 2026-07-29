@@ -11,7 +11,18 @@
     "groups": "Groups",
     "login": "Login",
     "module": "Module",
-    "private_space": "Private Space"
+    "private_space": "Private Space",
+    "main": "Main menu",
+    "tools": "Tools",
+    "events": "Events",
+    "communications": "Communication",
+    "care": "Pastoral care",
+    "finance": "Finance",
+    "calendar": "Calendar",
+    "kiosk": "Kiosk",
+    "repertoire": "Repertoire",
+    "manuals": "Manuals",
+    "whatsapp": "WhatsApp"
   },
   "dashboard": {
     "eyebrow": "Welcome back",
@@ -98,7 +109,9 @@
     },
     "show": {
       "title": "Person details",
-      "heading": "Person details"
+      "heading": "Person details",
+      "contacts_title": "Contacts",
+      "contacts_empty": "No contacts registered."
     },
     "forms": {
       "first_name": "First name",
@@ -136,7 +149,9 @@
     },
     "show": {
       "title": "Family details",
-      "heading": "Family details"
+      "heading": "Family details",
+      "contacts_title": "Contacts",
+      "contacts_empty": "No contacts registered."
     },
     "forms": {
       "name": "Name",
@@ -229,6 +244,358 @@
       "auth_required_create": "Authentication required to create live records.",
       "auth_required_update": "Authentication required to update live records.",
       "auth_required_load": "Authentication required to load live data."
+    }
+  },
+  "events": {
+    "title": "Events",
+    "eyebrow": "Module",
+    "copy": "Calendar items, services, and activities organized in a list and guided form experience.",
+    "registered": "Registered events",
+    "columns": {
+      "title": "Title",
+      "group": "Group",
+      "starts_at": "Starts at",
+      "location": "Location",
+      "is_active": "Active"
+    },
+    "create": {
+      "title": "Create event",
+      "heading": "Create event"
+    },
+    "edit": {
+      "title": "Edit event",
+      "heading": "Edit event"
+    },
+    "show": {
+      "title": "Event details",
+      "heading": "Event details"
+    },
+    "forms": {
+      "group": "Group",
+      "group_placeholder": "Select a group",
+      "group_none": "No group",
+      "title": "Title",
+      "description": "Description",
+      "body": "Content",
+      "location": "Location",
+      "starts_at": "Starts at",
+      "ends_at": "Ends at",
+      "all_day": "All day",
+      "calendar_uid": "Calendar UID",
+      "calendar_url": "Calendar URL",
+      "source": "Source"
+    },
+    "actions": {
+      "save_event": "Save event",
+      "update_event": "Update event"
+    },
+    "fallback_event": {
+      "title": "Sunday service",
+      "group": "No group",
+      "starts_at": "—",
+      "location": "Main auditorium"
+    }
+  },
+  "care": {
+    "title": "Pastoral care",
+    "eyebrow": "Module",
+    "copy": "Notes and pastoral follow-up in a simple, visible flow tied to real fields.",
+    "summary": {
+      "notes": "Notes",
+      "records": "Pastoral records",
+      "visibility": "Visibility",
+      "visibility_value": "Clear control",
+      "notes_copy": "Quick follow-ups with optional person and family linkage",
+      "records_copy": "Pastoral records with date, type, and visibility"
+    },
+    "notes": {
+      "title": "Notes",
+      "columns": {
+        "title": "Title",
+        "person": "Person",
+        "family": "Family",
+        "private": "Private"
+      },
+      "create": {
+        "title": "Create note",
+        "heading": "Create note"
+      },
+      "actions": {
+        "save_note": "Save note"
+      }
+    },
+    "records": {
+      "title": "Pastoral records",
+      "columns": {
+        "type": "Type",
+        "person": "Person",
+        "family": "Family",
+        "visible": "Visible"
+      },
+      "create": {
+        "title": "Create pastoral record",
+        "heading": "Create pastoral record"
+      },
+      "actions": {
+        "save_record": "Save record"
+      }
+    },
+    "forms": {
+      "person_id": "Person ID",
+      "family_id": "Family ID",
+      "title": "Title",
+      "type": "Type",
+      "info": "Info",
+      "body": "Body",
+      "private": "Private",
+      "pastor_user_id": "Pastor user ID",
+      "pastor_name": "Pastor name",
+      "visible": "Visible"
+    },
+    "fallback_note": {
+      "title": "Follow-up",
+      "person": "Maria Silva",
+      "family": "Silva Family"
+    },
+    "fallback_record": {
+      "type": "Visit",
+      "person": "Maria Silva",
+      "family": "Silva Family"
+    }
+  },
+  "communications": {
+    "title": "Communication",
+    "eyebrow": "Module",
+    "copy": "Choose between WAHA or the official Meta API and keep church communication under control.",
+    "summary": {
+      "channel": "Channel",
+      "status": "Status",
+      "next_step": "Next step",
+      "channel_copy": "Church-specific integration",
+      "status_copy": "Active or inactive based on local decision",
+      "next_step_value": "Configure WhatsApp"
+    },
+    "integration": {
+      "title": "WhatsApp integration",
+      "provider": "Provider",
+      "provider_placeholder": "Select a provider",
+      "enabled": "Active",
+      "mode": "Mode",
+      "endpoint": "Endpoint",
+      "instance": "Instance",
+      "actions_title": "Actions",
+      "configure": "Configure integration",
+      "open_whatsapp": "Open WhatsApp integration",
+      "save": "Save integration",
+      "saved": "Integration saved.",
+      "save_error": "Unable to save the integration.",
+      "none": "No integration",
+      "waha_title": "WAHA",
+      "meta_title": "Official Meta",
+      "waha_base_url": "WAHA base URL",
+      "waha_instance": "WAHA instance",
+      "meta_phone_number_id": "Phone Number ID",
+      "meta_waba_id": "WABA ID",
+      "meta_access_token": "Access Token"
+    },
+    "providers": {
+      "waha": "WAHA",
+      "meta": "Official Meta",
+      "waha_mode": "Self-hosted",
+      "meta_mode": "Cloud API"
+    }
+  },
+  "finance": {
+    "title": "Finance",
+    "eyebrow": "Module",
+    "copy": "Track funds, deposits, and pledges in a simple, clear, and extensible way.",
+    "summary": {
+      "funds": "Funds",
+      "deposits": "Deposits",
+      "pledges": "Pledges",
+      "funds_copy": "Active and inactive funds organized per church",
+      "deposits_copy": "Recent deposits linked to funds",
+      "pledges_copy": "Pledges linked to families"
+    },
+    "funds": {
+      "title": "Donation funds",
+      "columns": {
+        "name": "Name",
+        "description": "Description",
+        "active": "Active"
+      },
+      "create": {
+        "title": "Create fund",
+        "heading": "Create fund"
+      },
+      "edit": {
+        "title": "Edit fund",
+        "heading": "Edit fund"
+      },
+      "show": {
+        "title": "Fund details",
+        "heading": "Fund details"
+      },
+      "forms": {
+        "name": "Name",
+        "description": "Description"
+      },
+      "actions": {
+        "save_fund": "Save fund",
+        "update_fund": "Update fund"
+      }
+    },
+    "deposits": {
+      "title": "Deposits",
+      "columns": {
+        "date": "Date",
+        "fund": "Fund",
+        "type": "Type",
+        "closed": "Closed"
+      }
+    },
+    "pledges": {
+      "title": "Pledges",
+      "columns": {
+        "family": "Family",
+        "fund": "Fund",
+        "amount": "Amount",
+        "status": "Status"
+      }
+    },
+    "fallback_fund": {
+      "name": "General offering",
+      "description": "Default fund",
+      "active": true
+    },
+    "fallback_deposit": {
+      "date": "—",
+      "fund": "General offering",
+      "type": "manual"
+    },
+    "fallback_pledge": {
+      "family": "Silva Family",
+      "fund": "General offering",
+      "amount": "0.00",
+      "status": "Pending"
+    }
+  },
+  "calendar": {
+    "title": "Calendar",
+    "eyebrow": "Schedule and celebrations",
+    "copy": "A clean view to track events, sync status, and the next church commitment without losing context.",
+    "summary": {
+      "events": "Events",
+      "events_copy": "Events loaded from the current base",
+      "next_event": "Next event",
+      "next_event_copy": "Quick reference for the next activity",
+      "sync": "Sync",
+      "sync_copy": "Integration ready to grow with the schedule",
+      "sync_value": "Ready"
+    },
+    "list": {
+      "title": "Recent schedule",
+      "columns": {
+        "title": "Name",
+        "group": "Group",
+        "starts_at": "Start",
+        "is_active": "Status"
+      }
+    },
+    "fallback_event": {
+      "title": "Sunday service",
+      "group": "Main ministry",
+      "starts_at": "No times loaded"
+    }
+  },
+  "kiosk": {
+    "title": "Kiosk",
+    "eyebrow": "Self-service and reception",
+    "copy": "A quick summary for people, families, and events with a simple panel for local operation.",
+    "summary": {
+      "people": "People",
+      "people_copy": "Total available to the receptionist",
+      "families": "Families",
+      "families_copy": "Base ready for fast lookups",
+      "check_in": "Check-in",
+      "check_in_copy": "Flow prepared for front desk work",
+      "check_in_value": "Available"
+    },
+    "snapshot": {
+      "title": "Operation panel",
+      "groups": "Groups",
+      "events": "Events",
+      "status": "State",
+      "ready": "Ready"
+    },
+    "actions": {
+      "title": "Shortcuts",
+      "open_people": "Open people",
+      "open_groups": "Open groups"
+    }
+  },
+  "repertoire": {
+    "title": "Repertoire",
+    "eyebrow": "Worship and organization",
+    "copy": "A simple view to track songs, sets, and ministry preparation with a lightweight interface.",
+    "summary": {
+      "tracks": "Tracks",
+      "tracks_copy": "Items loaded for the team",
+      "groups": "Sets",
+      "groups_copy": "Organized by team and occasion",
+      "ready": "Ready",
+      "ready_copy": "Structure prepared to grow",
+      "ready_value": "Available"
+    },
+    "guidelines": {
+      "title": "Guidelines",
+      "item_1": "Standardize repertoires by service and event.",
+      "item_2": "Keep ordering clear and accessible.",
+      "item_3": "Keep the flow simple for worship teams."
+    },
+    "actions": {
+      "title": "Shortcuts",
+      "open_groups": "Open groups",
+      "open_events": "Open events"
+    }
+  },
+  "manuals": {
+    "title": "Manuals",
+    "eyebrow": "Help and process",
+    "copy": "A simple hub for guides, internal processes, and support for new users.",
+    "summary": {
+      "guides": "Guides",
+      "guides_copy": "Support content for the team",
+      "modules": "Modules",
+      "modules_copy": "Usage guidance by area",
+      "updated": "Updated",
+      "updated_copy": "Content review reference",
+      "updated_value": "Recent"
+    },
+    "topics": {
+      "title": "Main topics",
+      "item_1": "Basic registration and guided flow.",
+      "item_2": "Permissions and navigation by role.",
+      "item_3": "Best practices for church use."
+    },
+    "actions": {
+      "title": "Shortcuts",
+      "open_people": "Open people",
+      "open_care": "Open pastoral care"
+    }
+  },
+  "modules": {
+    "placeholder": {
+      "copy": "This module will be expanded in stages to keep navigation simple and complex workflows organized.",
+      "status": "Status",
+      "ready": "Ready to evolve",
+      "status_copy": "The modular baseline already supports growth without breaking the rest of the system.",
+      "next_step": "Next step",
+      "guided_flow": "Guided flow",
+      "next_step_copy": "Long forms remain split into steps to keep the experience manageable.",
+      "integration": "Integration",
+      "shared_stack": "Shared stack",
+      "integration_copy": "Each module keeps reusing the same technical foundation."
     }
   }
 }

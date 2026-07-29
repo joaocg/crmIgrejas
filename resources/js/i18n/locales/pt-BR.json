@@ -11,7 +11,18 @@
     "groups": "Grupos",
     "login": "Entrar",
     "module": "Módulo",
-    "private_space": "Espaço privado"
+    "private_space": "Espaço privado",
+    "main": "Menu principal",
+    "tools": "Ferramentas",
+    "events": "Eventos",
+    "communications": "Comunicação",
+    "care": "Cuidado pastoral",
+    "finance": "Financeiro",
+    "calendar": "Calendário",
+    "kiosk": "Kiosk",
+    "repertoire": "Repertório",
+    "manuals": "Manuais",
+    "whatsapp": "WhatsApp"
   },
   "dashboard": {
     "eyebrow": "Bem-vindo de volta",
@@ -98,7 +109,9 @@
     },
     "show": {
       "title": "Detalhes da pessoa",
-      "heading": "Detalhes da pessoa"
+      "heading": "Detalhes da pessoa",
+      "contacts_title": "Contatos",
+      "contacts_empty": "Nenhum contato cadastrado."
     },
     "forms": {
       "first_name": "Nome",
@@ -136,7 +149,9 @@
     },
     "show": {
       "title": "Detalhes da família",
-      "heading": "Detalhes da família"
+      "heading": "Detalhes da família",
+      "contacts_title": "Contatos",
+      "contacts_empty": "Nenhum contato cadastrado."
     },
     "forms": {
       "name": "Nome",
@@ -229,6 +244,358 @@
       "auth_required_create": "É necessário autenticação para criar registros reais.",
       "auth_required_update": "É necessário autenticação para atualizar registros reais.",
       "auth_required_load": "É necessário autenticação para carregar os dados reais."
+    }
+  },
+  "events": {
+    "title": "Eventos",
+    "eyebrow": "Módulo",
+    "copy": "Agenda, cultos e atividades organizadas em uma experiência de lista e formulário guiado.",
+    "registered": "Eventos cadastrados",
+    "columns": {
+      "title": "Título",
+      "group": "Grupo",
+      "starts_at": "Início",
+      "location": "Local",
+      "is_active": "Ativo"
+    },
+    "create": {
+      "title": "Criar evento",
+      "heading": "Criar evento"
+    },
+    "edit": {
+      "title": "Editar evento",
+      "heading": "Editar evento"
+    },
+    "show": {
+      "title": "Detalhes do evento",
+      "heading": "Detalhes do evento"
+    },
+    "forms": {
+      "group": "Grupo",
+      "group_placeholder": "Selecione um grupo",
+      "group_none": "Sem grupo",
+      "title": "Título",
+      "description": "Descrição",
+      "body": "Conteúdo",
+      "location": "Local",
+      "starts_at": "Início",
+      "ends_at": "Fim",
+      "all_day": "Dia inteiro",
+      "calendar_uid": "UID do calendário",
+      "calendar_url": "URL do calendário",
+      "source": "Origem"
+    },
+    "actions": {
+      "save_event": "Salvar evento",
+      "update_event": "Atualizar evento"
+    },
+    "fallback_event": {
+      "title": "Culto de domingo",
+      "group": "Sem grupo",
+      "starts_at": "—",
+      "location": "Auditório principal"
+    }
+  },
+  "care": {
+    "title": "Cuidado pastoral",
+    "eyebrow": "Módulo",
+    "copy": "Notas e acompanhamentos pastorais em um fluxo simples, visível e orientado a campos reais.",
+    "summary": {
+      "notes": "Notas",
+      "records": "Registros pastorais",
+      "visibility": "Visibilidade",
+      "visibility_value": "Controle claro",
+      "notes_copy": "Acompanhamentos rápidos com vínculo opcional a pessoa e família",
+      "records_copy": "Registros pastorais com data, tipo e visibilidade"
+    },
+    "notes": {
+      "title": "Notas",
+      "columns": {
+        "title": "Título",
+        "person": "Pessoa",
+        "family": "Família",
+        "private": "Privada"
+      },
+      "create": {
+        "title": "Criar nota",
+        "heading": "Criar nota"
+      },
+      "actions": {
+        "save_note": "Salvar nota"
+      }
+    },
+    "records": {
+      "title": "Registros pastorais",
+      "columns": {
+        "type": "Tipo",
+        "person": "Pessoa",
+        "family": "Família",
+        "visible": "Visível"
+      },
+      "create": {
+        "title": "Criar registro pastoral",
+        "heading": "Criar registro pastoral"
+      },
+      "actions": {
+        "save_record": "Salvar registro"
+      }
+    },
+    "forms": {
+      "person_id": "ID da pessoa",
+      "family_id": "ID da família",
+      "title": "Título",
+      "type": "Tipo",
+      "info": "Informação",
+      "body": "Conteúdo",
+      "private": "Privada",
+      "pastor_user_id": "ID do pastor",
+      "pastor_name": "Nome do pastor",
+      "visible": "Visível"
+    },
+    "fallback_note": {
+      "title": "Acompanhamento",
+      "person": "Maria Silva",
+      "family": "Família Silva"
+    },
+    "fallback_record": {
+      "type": "Visita",
+      "person": "Maria Silva",
+      "family": "Família Silva"
+    }
+  },
+  "communications": {
+    "title": "Comunicação",
+    "eyebrow": "Módulo",
+    "copy": "Escolha entre WAHA ou a API oficial da Meta e mantenha a comunicação da igreja sob controle.",
+    "summary": {
+      "channel": "Canal",
+      "status": "Status",
+      "next_step": "Próximo passo",
+      "channel_copy": "Integração configurável por igreja",
+      "status_copy": "Ativo ou inativo conforme a decisão local",
+      "next_step_value": "Configurar WhatsApp"
+    },
+    "integration": {
+      "title": "Integração WhatsApp",
+      "provider": "Provedor",
+      "provider_placeholder": "Selecione o provedor",
+      "enabled": "Ativo",
+      "mode": "Modo",
+      "endpoint": "Endpoint",
+      "instance": "Instância",
+      "actions_title": "Ações",
+      "configure": "Configurar integração",
+      "open_whatsapp": "Abrir integração WhatsApp",
+      "save": "Salvar integração",
+      "saved": "Integração salva.",
+      "save_error": "Não foi possível salvar a integração.",
+      "none": "Sem integração",
+      "waha_title": "WAHA",
+      "meta_title": "Meta oficial",
+      "waha_base_url": "URL base do WAHA",
+      "waha_instance": "Instância WAHA",
+      "meta_phone_number_id": "Phone Number ID",
+      "meta_waba_id": "WABA ID",
+      "meta_access_token": "Access Token"
+    },
+    "providers": {
+      "waha": "WAHA",
+      "meta": "Meta oficial",
+      "waha_mode": "Auto-hospedado",
+      "meta_mode": "Cloud API"
+    }
+  },
+  "finance": {
+    "title": "Financeiro",
+    "eyebrow": "Módulo",
+    "copy": "Controle de fundos, depósitos e promessas de forma simples, clara e pronta para expansão.",
+    "summary": {
+      "funds": "Fundos",
+      "deposits": "Depósitos",
+      "pledges": "Promessas",
+      "funds_copy": "Fundos ativos e inativos organizados por igreja",
+      "deposits_copy": "Depósitos recentes conectados aos fundos",
+      "pledges_copy": "Promessas vinculadas a famílias"
+    },
+    "funds": {
+      "title": "Fundos de oferta",
+      "columns": {
+        "name": "Nome",
+        "description": "Descrição",
+        "active": "Ativo"
+      },
+      "create": {
+        "title": "Criar fundo",
+        "heading": "Criar fundo"
+      },
+      "edit": {
+        "title": "Editar fundo",
+        "heading": "Editar fundo"
+      },
+      "show": {
+        "title": "Detalhes do fundo",
+        "heading": "Detalhes do fundo"
+      },
+      "forms": {
+        "name": "Nome",
+        "description": "Descrição"
+      },
+      "actions": {
+        "save_fund": "Salvar fundo",
+        "update_fund": "Atualizar fundo"
+      }
+    },
+    "deposits": {
+      "title": "Depósitos",
+      "columns": {
+        "date": "Data",
+        "fund": "Fundo",
+        "type": "Tipo",
+        "closed": "Fechado"
+      }
+    },
+    "pledges": {
+      "title": "Promessas",
+      "columns": {
+        "family": "Família",
+        "fund": "Fundo",
+        "amount": "Valor",
+        "status": "Status"
+      }
+    },
+    "fallback_fund": {
+      "name": "Oferta geral",
+      "description": "Fundo padrão",
+      "active": true
+    },
+    "fallback_deposit": {
+      "date": "—",
+      "fund": "Oferta geral",
+      "type": "manual"
+    },
+    "fallback_pledge": {
+      "family": "Família Silva",
+      "fund": "Oferta geral",
+      "amount": "0,00",
+      "status": "Pendente"
+    }
+  },
+  "calendar": {
+    "title": "Calendário",
+    "eyebrow": "Agenda e celebrações",
+    "copy": "Uma visão limpa para acompanhar eventos, sincronização e o próximo compromisso da igreja sem perder contexto.",
+    "summary": {
+      "events": "Eventos",
+      "events_copy": "Eventos carregados da base atual",
+      "next_event": "Próximo evento",
+      "next_event_copy": "Referência rápida para a próxima atividade",
+      "sync": "Sincronização",
+      "sync_copy": "Integração preparada para crescer com a agenda",
+      "sync_value": "Pronto"
+    },
+    "list": {
+      "title": "Agenda recente",
+      "columns": {
+        "title": "Nome",
+        "group": "Grupo",
+        "starts_at": "Início",
+        "is_active": "Status"
+      }
+    },
+    "fallback_event": {
+      "title": "Culto de domingo",
+      "group": "Ministério principal",
+      "starts_at": "Sem horários carregados"
+    }
+  },
+  "kiosk": {
+    "title": "Kiosk",
+    "eyebrow": "Autoatendimento e recepção",
+    "copy": "Resumo rápido para entrada de pessoas, famílias e eventos com um painel simples para operação local.",
+    "summary": {
+      "people": "Pessoas",
+      "people_copy": "Total disponível para o recepcionista",
+      "families": "Famílias",
+      "families_copy": "Base pronta para buscas rápidas",
+      "check_in": "Check-in",
+      "check_in_copy": "Fluxo preparado para atendimento",
+      "check_in_value": "Disponível"
+    },
+    "snapshot": {
+      "title": "Painel de operação",
+      "groups": "Grupos",
+      "events": "Eventos",
+      "status": "Estado",
+      "ready": "Pronto"
+    },
+    "actions": {
+      "title": "Atalhos",
+      "open_people": "Abrir pessoas",
+      "open_groups": "Abrir grupos"
+    }
+  },
+  "repertoire": {
+    "title": "Repertório",
+    "eyebrow": "Louvor e organização",
+    "copy": "Uma visão simples para acompanhar músicas, conjuntos e preparo do ministério com uma interface leve.",
+    "summary": {
+      "tracks": "Faixas",
+      "tracks_copy": "Itens carregados para a equipe",
+      "groups": "Conjuntos",
+      "groups_copy": "Organização por time e ocasião",
+      "ready": "Pronto",
+      "ready_copy": "Estrutura preparada para crescer",
+      "ready_value": "Disponível"
+    },
+    "guidelines": {
+      "title": "Diretrizes",
+      "item_1": "Padronizar repertórios por culto e evento.",
+      "item_2": "Permitir ordenação clara e acessível.",
+      "item_3": "Manter o fluxo simples para equipes de louvor."
+    },
+    "actions": {
+      "title": "Atalhos",
+      "open_groups": "Abrir grupos",
+      "open_events": "Abrir eventos"
+    }
+  },
+  "manuals": {
+    "title": "Manuais",
+    "eyebrow": "Ajuda e processo",
+    "copy": "Uma central simples para guias, processos internos e apoio para quem entra no sistema.",
+    "summary": {
+      "guides": "Guias",
+      "guides_copy": "Conteúdos de apoio para o time",
+      "modules": "Módulos",
+      "modules_copy": "Guia de uso por área",
+      "updated": "Atualização",
+      "updated_copy": "Referência de revisão do conteúdo",
+      "updated_value": "Recente"
+    },
+    "topics": {
+      "title": "Tópicos principais",
+      "item_1": "Cadastro básico e fluxo guiado.",
+      "item_2": "Permissões e navegação por perfil.",
+      "item_3": "Boas práticas para uso em igreja."
+    },
+    "actions": {
+      "title": "Atalhos",
+      "open_people": "Abrir pessoas",
+      "open_care": "Abrir cuidado pastoral"
+    }
+  },
+  "modules": {
+    "placeholder": {
+      "copy": "Este módulo será evoluído em etapas para manter a navegação simples e os fluxos complexos organizados.",
+      "status": "Status",
+      "ready": "Pronto para evoluir",
+      "status_copy": "A base modular já aceita expansão sem quebrar o restante do sistema.",
+      "next_step": "Próximo passo",
+      "guided_flow": "Fluxo guiado",
+      "next_step_copy": "Telas longas continuam divididas por etapas para simplificar o uso.",
+      "integration": "Integração",
+      "shared_stack": "Stack compartilhada",
+      "integration_copy": "Cada módulo continua reutilizando a mesma fundação técnica."
     }
   }
 }

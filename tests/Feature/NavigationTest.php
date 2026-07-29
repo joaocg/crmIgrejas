@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Role;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,8 +27,19 @@ class NavigationTest extends TestCase
             'active' => true,
         ]);
 
+        $role = Role::create([
+            'tenant_id' => $tenant->id,
+            'slug' => 'admin',
+            'name' => 'Admin',
+            'description' => 'Administrator',
+            'permissions' => ['*' => true],
+            'is_system' => true,
+            'active' => true,
+        ]);
+
         $user = User::factory()->create([
             'tenant_id' => $tenant->id,
+            'role_id' => $role->id,
             'email' => 'admin@church.local',
             'password' => 'password',
             'active' => true,
@@ -38,6 +50,51 @@ class NavigationTest extends TestCase
             ->assertOk()
             ->assertJsonPath('sections.0.key', 'main')
             ->assertJsonPath('sections.0.items.0.route', '/dashboard')
-            ->assertJsonPath('sections.1.key', 'tools');
+            ->assertJsonPath('sections.1.key', 'tools')
+            ->assertJsonPath('sections.1.items.1.route', '/care');
+    }
+
+    public function test_navigation_is_filtered_by_role_permissions(): void
+    {
+        $tenant = Tenant::create([
+            'slug' => 'restricted',
+            'name' => 'Restricted Church',
+            'locale' => 'pt_BR',
+            'timezone' => 'America/Fortaleza',
+            'active' => true,
+        ]);
+
+        $role = Role::create([
+            'tenant_id' => $tenant->id,
+            'slug' => 'viewer',
+            'name' => 'Viewer',
+            'description' => 'Limited access',
+            'permissions' => [
+                'navigation.people' => true,
+                'navigation.groups' => true,
+            ],
+            'is_system' => false,
+            'active' => true,
+        ]);
+
+        $user = User::factory()->create([
+            'tenant_id' => $tenant->id,
+            'role_id' => $role->id,
+            'email' => 'viewer@church.local',
+            'password' => 'password',
+            'active' => true,
+        ]);
+
+        $response = $this->actingAs($user, 'sanctum')
+            ->getJson('/api/navigation')
+            ->assertOk();
+
+        $response->assertJsonMissing([
+            'key' => 'users',
+        ]);
+
+        $response->assertJsonPath('sections.0.items.0.key', 'dashboard');
+        $response->assertJsonPath('sections.0.items.1.key', 'people');
+        $response->assertJsonPath('sections.0.items.2.key', 'groups');
     }
 }

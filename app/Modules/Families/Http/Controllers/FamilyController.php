@@ -47,7 +47,7 @@ final class FamilyController
     {
         $this->authorizeTenantAccess($request, $family);
 
-        return response()->json($family->load(['address', 'people']));
+        return response()->json($family->load(['address', 'contacts', 'people']));
     }
 
     public function update(Request $request, Family $family, UpdateFamilyAction $action): JsonResponse

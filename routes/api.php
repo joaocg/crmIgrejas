@@ -11,5 +11,5 @@ Route::middleware('auth:sanctum')->get('/navigation', NavigationController::clas
 
 // Feature modules register their own routes through the manifest-driven module loader.
 Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
-    return $request->user();
+    return $request->user()?->loadMissing('role');
 });

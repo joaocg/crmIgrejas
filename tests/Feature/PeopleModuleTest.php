@@ -39,6 +39,13 @@ class PeopleModuleTest extends TestCase
             'first_name' => 'Joao',
             'last_name' => 'Coelho',
         ]);
+        $person->contacts()->create([
+            'tenant_id' => $tenant->id,
+            'type' => 'email',
+            'label' => 'Email',
+            'value' => 'joao@example.com',
+            'is_primary' => true,
+        ]);
 
         $otherPerson = Person::create([
             'tenant_id' => $otherTenant->id,
@@ -66,6 +73,11 @@ class PeopleModuleTest extends TestCase
         $this->actingAs($user, 'sanctum')
             ->getJson("/api/people/{$otherPerson->id}")
             ->assertNotFound();
+
+        $this->actingAs($user, 'sanctum')
+            ->getJson("/api/people/{$person->id}")
+            ->assertOk()
+            ->assertJsonPath('contacts.0.value', 'joao@example.com');
     }
 
     private function createTenant(string $slug): Tenant

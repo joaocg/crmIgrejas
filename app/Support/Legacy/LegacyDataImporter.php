@@ -157,10 +157,14 @@ class LegacyDataImporter
             ]
         );
 
-        return (int) DB::table('families')
+        $familyId = (int) DB::table('families')
             ->where('tenant_id', $tenantId)
             ->where('name', $legacyFamily->fam_Name)
             ->value('id');
+
+        $this->syncFamilyContacts($tenantId, $familyId, $legacyFamily);
+
+        return $familyId;
     }
 
     protected function importPerson(int $tenantId, string $connectionName, object $legacyPerson): int
@@ -219,12 +223,62 @@ class LegacyDataImporter
             ]
         );
 
-        return (int) DB::table('persons')
+        $personId = (int) DB::table('persons')
             ->where('tenant_id', $tenantId)
             ->where('first_name', $this->legacyValue($legacyPerson, 'per_FirstName'))
             ->where('last_name', $this->legacyValue($legacyPerson, 'per_LastName'))
             ->where('family_id', $familyId)
             ->value('id');
+
+        $this->syncPersonContacts($tenantId, $personId, $legacyPerson);
+
+        return $personId;
+    }
+
+    protected function syncFamilyContacts(int $tenantId, int $familyId, object $legacyFamily): void
+    {
+        $this->syncContact($tenantId, null, $familyId, 'email', 'Email', $this->legacyValue($legacyFamily, 'fam_Email'), true);
+        $this->syncContact($tenantId, null, $familyId, 'home_phone', 'Home phone', $this->legacyValue($legacyFamily, 'fam_HomePhone'));
+        $this->syncContact($tenantId, null, $familyId, 'work_phone', 'Work phone', $this->legacyValue($legacyFamily, 'fam_WorkPhone'));
+        $this->syncContact($tenantId, null, $familyId, 'mobile_phone', 'Mobile phone', $this->legacyValue($legacyFamily, 'fam_CellPhone'));
+    }
+
+    protected function syncPersonContacts(int $tenantId, int $personId, object $legacyPerson): void
+    {
+        $this->syncContact($tenantId, $personId, null, 'email', 'Email', $this->legacyValue($legacyPerson, 'per_Email'), true);
+        $this->syncContact($tenantId, $personId, null, 'mobile_phone', 'Mobile phone', $this->legacyValue($legacyPerson, 'per_CellPhone'));
+    }
+
+    protected function syncContact(
+        int $tenantId,
+        ?int $personId,
+        ?int $familyId,
+        string $type,
+        ?string $label,
+        mixed $value,
+        bool $isPrimary = false
+    ): void {
+        if ($value === null || $value === '') {
+            return;
+        }
+
+        $now = now();
+
+        DB::table('contacts')->updateOrInsert(
+            [
+                'tenant_id' => $tenantId,
+                'person_id' => $personId,
+                'family_id' => $familyId,
+                'type' => $type,
+                'value' => $value,
+            ],
+            [
+                'label' => $label,
+                'is_primary' => $isPrimary,
+                'updated_at' => $now,
+                'created_at' => $now,
+            ]
+        );
     }
 
     protected function upsertAddress(int $tenantId, array $attributes): ?int

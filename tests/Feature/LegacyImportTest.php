@@ -93,14 +93,19 @@ class LegacyImportTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'admin@localhost']);
         $this->assertDatabaseHas('families', ['name' => 'Doe Family']);
         $this->assertDatabaseHas('persons', ['first_name' => 'John', 'last_name' => 'Doe']);
+        $this->assertDatabaseHas('contacts', ['type' => 'email', 'value' => 'family@example.com']);
+        $this->assertDatabaseHas('contacts', ['type' => 'email', 'value' => 'john@example.com']);
+        $this->assertDatabaseHas('contacts', ['type' => 'mobile_phone', 'value' => '(85) 99999-0000']);
 
         $familyCount = DB::table('families')->count();
         $personCount = DB::table('persons')->count();
+        $contactCount = DB::table('contacts')->count();
 
         $this->artisan('legacy:import --connection=legacy')
             ->assertExitCode(0);
 
         $this->assertSame($familyCount, DB::table('families')->count());
         $this->assertSame($personCount, DB::table('persons')->count());
+        $this->assertSame($contactCount, DB::table('contacts')->count());
     }
 }

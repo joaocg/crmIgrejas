@@ -17,18 +17,37 @@ final class Role extends Model
         'name',
         'slug',
         'description',
+        'permissions',
         'is_system',
+        'active',
     ];
 
     protected function casts(): array
     {
         return [
+            'permissions' => 'array',
             'is_system' => 'boolean',
+            'active' => 'boolean',
         ];
     }
 
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    public function allows(string $ability): bool
+    {
+        $permissions = $this->permissions ?? [];
+
+        if (! is_array($permissions)) {
+            return false;
+        }
+
+        if (($permissions['*'] ?? false) === true) {
+            return true;
+        }
+
+        return ($permissions[$ability] ?? false) === true;
     }
 }
