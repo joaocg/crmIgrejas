@@ -52,7 +52,9 @@ const statusOptions = [
 onMounted(async () => {
     try {
         const response = await showGroup(route.params.id);
-        Object.assign(form, response.data);
+        // The API wraps single resources in a `data` envelope; the list
+        // pages unwrap it the same way.
+        Object.assign(form, response.data?.data ?? response.data ?? {});
     } catch {
         message.value = t('forms.messages.auth_required_load');
     }

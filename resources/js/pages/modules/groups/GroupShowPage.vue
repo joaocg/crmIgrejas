@@ -39,7 +39,9 @@ const group = reactive({
 onMounted(async () => {
     try {
         const response = await showGroup(route.params.id);
-        Object.assign(group, response.data);
+        // The API wraps single resources in a `data` envelope; the list
+        // pages unwrap it the same way.
+        Object.assign(group, response.data?.data ?? response.data ?? {});
     } catch {
         message.value = t('forms.messages.auth_required_load');
     }
