@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\People\Http\Requests;
+namespace App\Modules\Families\Http\Requests;
 
 use App\Support\Http\Requests\BuildsCrudRules;
 use App\Support\Validation\TenantRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Shared field constraints for StorePersonRequest and UpdatePersonRequest.
+ * Shared field constraints for StoreFamilyRequest and UpdateFamilyRequest.
  *
  * Each concrete request declares only how presence is handled (required on
  * create vs. sometimes-optional on update) by combining typeRules() with
- * the forCreate()/forUpdate() helpers from BuildsCrudRules.
+ * the forCreate()/forUpdate() helpers from BuildsCrudRules. Mirrors
+ * App\Modules\People\Http\Requests\PersonRequest.
  */
-abstract class PersonRequest extends FormRequest
+abstract class FamilyRequest extends FormRequest
 {
     use BuildsCrudRules;
 
@@ -33,18 +34,16 @@ abstract class PersonRequest extends FormRequest
     protected function typeRules(): array
     {
         return [
-            'family_id' => ['integer', TenantRule::exists('families')],
             'address_id' => ['integer', TenantRule::exists('addresses')],
-            'title' => ['string', 'max:255'],
-            'first_name' => ['string', 'max:255'],
-            'middle_name' => ['string', 'max:255'],
-            'last_name' => ['string', 'max:255'],
-            'suffix' => ['string', 'max:255'],
-            'birth_date' => ['date'],
-            'membership_date' => ['date'],
-            'gender' => ['integer'],
+            'name' => ['string', 'max:255'],
+            'wedding_date' => ['date'],
+            'email' => ['email', 'max:255'],
+            'home_phone' => ['string', 'max:30'],
+            'work_phone' => ['string', 'max:30'],
+            'mobile_phone' => ['string', 'max:30'],
             'envelope_number' => ['integer'],
             'newsletter_enabled' => ['boolean'],
+            'canvass_allowed' => ['boolean'],
             'deactivated_at' => ['date'],
         ];
     }

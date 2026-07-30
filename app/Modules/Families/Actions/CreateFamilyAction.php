@@ -8,11 +8,11 @@ use App\Models\Family;
 
 final class CreateFamilyAction
 {
-    public function execute(int $tenantId, array $data): Family
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function execute(array $data): Family
     {
-        return Family::create([
-            ...$data,
-            'tenant_id' => $tenantId,
-        ]);
+        return Family::create($data);
     }
 }

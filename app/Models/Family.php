@@ -14,6 +14,18 @@ final class Family extends Model
 {
     use BelongsToTenant, HasFactory;
 
+    /**
+     * Single source of truth for the relations FamilyResource reads via
+     * whenLoaded(). Every call site that hydrates a Family for that resource
+     * (list query, store/show/update loads) must eager-load exactly this
+     * set, or a relation silently disappears from the JSON instead of
+     * appearing as null/[] — see FamiliesPrivacyTest for the regression this
+     * guards. Mirrors Person::API_RELATIONS.
+     *
+     * @var array<int, string>
+     */
+    public const API_RELATIONS = ['address', 'people', 'contacts'];
+
     protected $fillable = [
         'tenant_id',
         'address_id',

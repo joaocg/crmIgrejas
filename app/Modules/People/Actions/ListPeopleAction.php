@@ -6,13 +6,12 @@ namespace App\Modules\People\Actions;
 
 use App\Models\Person;
 use App\Modules\People\Http\Requests\ListPeopleRequest;
+use App\Support\Database\LikeTermEscaper;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 
 final class ListPeopleAction
 {
-    private const LIKE_ESCAPE_CHARACTER = '\\';
-
     public function execute(ListPeopleRequest $request): LengthAwarePaginator
     {
         $sortColumn = $request->sortColumn();
@@ -21,17 +20,15 @@ final class ListPeopleAction
             ->with(Person::API_RELATIONS)
             ->when(
                 $request->searchTerm(),
-                fn (Builder $query, string $term): Builder => $query->where(
-                    fn (Builder $inner): Builder => $inner
-                        ->whereRaw(
-                            'first_name LIKE ? ESCAPE ?',
-                            ['%'.$this->escapeLikeTerm($term).'%', self::LIKE_ESCAPE_CHARACTER]
-                        )
-                        ->orWhereRaw(
-                            'last_name LIKE ? ESCAPE ?',
-                            ['%'.$this->escapeLikeTerm($term).'%', self::LIKE_ESCAPE_CHARACTER]
-                        )
-                ),
+                function (Builder $query, string $term): Builder {
+                    $pattern = '%'.LikeTermEscaper::escape($term).'%';
+
+                    return $query->where(
+                        fn (Builder $inner): Builder => $inner
+                            ->whereRaw('first_name LIKE ? ESCAPE ?', [$pattern, LikeTermEscaper::ESCAPE_CHARACTER])
+                            ->orWhereRaw('last_name LIKE ? ESCAPE ?', [$pattern, LikeTermEscaper::ESCAPE_CHARACTER])
+                    );
+                },
             )
             ->orderBy($sortColumn, $request->sortDirection());
 
@@ -43,14 +40,5 @@ final class ListPeopleAction
             ->orderBy('id')
             ->paginate($request->perPage())
             ->withQueryString();
-    }
-
-    private function escapeLikeTerm(string $term): string
-    {
-        return strtr($term, [
-            self::LIKE_ESCAPE_CHARACTER => self::LIKE_ESCAPE_CHARACTER.self::LIKE_ESCAPE_CHARACTER,
-            '%' => self::LIKE_ESCAPE_CHARACTER.'%',
-            '_' => self::LIKE_ESCAPE_CHARACTER.'_',
-        ]);
     }
 }

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Family;
 use App\Models\Person;
+use App\Models\Role;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -52,15 +53,15 @@ class FamiliesModuleTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonCount(1)
-            ->assertJsonPath('0.id', $family->id);
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $family->id);
 
         $this->actingAs($user, 'sanctum')
             ->postJson('/api/families', [
                 'name' => 'New Family',
             ])
             ->assertCreated()
-            ->assertJsonPath('tenant_id', $tenant->id);
+            ->assertJsonPath('data.name', 'New Family');
 
         $this->actingAs($user, 'sanctum')
             ->getJson("/api/families/{$otherFamily->id}")
@@ -69,7 +70,7 @@ class FamiliesModuleTest extends TestCase
         $this->actingAs($user, 'sanctum')
             ->getJson("/api/families/{$family->id}")
             ->assertOk()
-            ->assertJsonPath('contacts.0.value', '(85) 98888-0000');
+            ->assertJsonPath('data.contacts.0.value', '(85) 98888-0000');
     }
 
     private function createTenant(string $slug): Tenant
@@ -87,8 +88,18 @@ class FamiliesModuleTest extends TestCase
 
     private function createUser(int $tenantId): User
     {
+        $role = Role::create([
+            'tenant_id' => $tenantId,
+            'slug' => 'admin',
+            'name' => 'Admin',
+            'permissions' => ['*' => true],
+            'is_system' => false,
+            'active' => true,
+        ]);
+
         return User::factory()->create([
             'tenant_id' => $tenantId,
+            'role_id' => $role->id,
             'email' => 'admin+'.uniqid().'@church.local',
             'password' => 'password',
             'active' => true,
