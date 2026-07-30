@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\People\Http\Requests;
 
-use App\Modules\People\Http\Resources\PersonResource;
+use App\Models\Person;
 use App\Support\Http\Requests\IndexRequest;
 
 final class ListPeopleRequest extends IndexRequest
@@ -30,7 +30,7 @@ final class ListPeopleRequest extends IndexRequest
     {
         $columns = ['first_name', 'last_name'];
 
-        if ($this->user()?->role?->allows(PersonResource::PRIVATE_DATA_ABILITY) ?? false) {
+        if ($this->user()?->role?->allows(Person::PRIVATE_DATA_ABILITY) ?? false) {
             $columns[] = 'created_at';
             $columns[] = 'updated_at';
         }

@@ -26,6 +26,14 @@ final class Family extends Model
      */
     public const API_RELATIONS = ['address', 'people', 'contacts'];
 
+    /**
+     * Legacy rule: src/v2/templates/people/familylist.php:104-121 replaces
+     * address, phones, email and the Created/Edited timestamps with
+     * "Private Data" unless User::isSeePrivacyDataEnabled(). Lives on the
+     * model for the same reason as Person::PRIVATE_DATA_ABILITY.
+     */
+    public const PRIVATE_DATA_ABILITY = 'families.private_data.view';
+
     protected $fillable = [
         'tenant_id',
         'address_id',

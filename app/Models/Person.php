@@ -25,6 +25,16 @@ final class Person extends Model
      */
     public const API_RELATIONS = ['family', 'address', 'contacts'];
 
+    /**
+     * Legacy rule: src/v2/templates/people/personlist.php:82-99 replaces
+     * address, phones, email and the Created/Edited timestamps with
+     * "Private Data" unless User::isSeePrivacyDataEnabled(). Lives on the
+     * model because both the resource (which masks the fields) and the list
+     * request (which gates sorting by the masked timestamps) need it, and a
+     * FormRequest has no business importing from Http\Resources.
+     */
+    public const PRIVATE_DATA_ABILITY = 'people.private_data.view';
+
     protected $table = 'persons';
 
     protected $fillable = [

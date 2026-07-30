@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace App\Modules\People\Http\Resources;
 
+use App\Models\Person;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * Legacy rule: src/v2/templates/people/personlist.php:82-99 replaces address,
+ * phones and email with "Private Data" when the user is not allowed to see
+ * private data (User::isSeePrivacyDataEnabled).
+ */
 final class PersonResource extends JsonResource
 {
-    /**
-     * Legacy rule: src/v2/templates/people/personlist.php replaces address,
-     * phones and email with "Private Data" when the user is not allowed to
-     * see private data (User::isSeePrivacyDataEnabled).
-     */
-    public const PRIVATE_DATA_ABILITY = 'people.private_data.view';
-
     /**
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
     {
-        $showsPrivateData = $request->user()?->role?->allows(self::PRIVATE_DATA_ABILITY) ?? false;
+        $showsPrivateData = $request->user()?->role?->allows(Person::PRIVATE_DATA_ABILITY) ?? false;
 
         return [
             'id' => $this->id,

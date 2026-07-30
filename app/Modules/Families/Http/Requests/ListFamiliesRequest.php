@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Families\Http\Requests;
 
-use App\Modules\Families\Http\Resources\FamilyResource;
+use App\Models\Family;
 use App\Support\Http\Requests\IndexRequest;
 
 final class ListFamiliesRequest extends IndexRequest
@@ -37,7 +37,7 @@ final class ListFamiliesRequest extends IndexRequest
     {
         $columns = ['name'];
 
-        if ($this->user()?->role?->allows(FamilyResource::PRIVATE_DATA_ABILITY) ?? false) {
+        if ($this->user()?->role?->allows(Family::PRIVATE_DATA_ABILITY) ?? false) {
             $columns[] = 'created_at';
             $columns[] = 'updated_at';
         }
