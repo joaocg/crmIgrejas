@@ -42,6 +42,15 @@ class GroupsAuthorizationTest extends TestCase
             ->assertJsonPath('data.0.name', 'Intercessao');
     }
 
+    public function test_showing_requires_the_view_all_ability_so_the_list_gate_is_not_walkable_by_id(): void
+    {
+        $this->actingAsTenantUser(['navigation.groups' => true]);
+
+        $group = Group::create(['name' => 'Intercessao']);
+
+        $this->getJson("/api/groups/{$group->id}")->assertForbidden();
+    }
+
     public function test_creating_requires_the_create_ability(): void
     {
         $this->actingAsTenantUser(['navigation.groups' => true]);

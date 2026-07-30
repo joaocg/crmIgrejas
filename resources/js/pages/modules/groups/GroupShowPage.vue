@@ -39,9 +39,10 @@ const group = reactive({
 onMounted(async () => {
     try {
         const response = await showGroup(route.params.id);
-        // The API wraps single resources in a `data` envelope; the list
-        // pages unwrap it the same way.
-        Object.assign(group, response.data?.data ?? response.data ?? {});
+        // The API wraps single resources in a `data` envelope. No fallback
+        // to the raw body: that would silently re-create the bug this
+        // fixes (assigning a literal `data` key) instead of failing loudly.
+        Object.assign(group, response.data.data);
     } catch {
         message.value = t('forms.messages.auth_required_load');
     }

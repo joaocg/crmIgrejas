@@ -25,9 +25,17 @@ final class Group extends Model
      * the regression this guards. Mirrors Person::API_RELATIONS and
      * Family::API_RELATIONS.
      *
+     * activeMemberships, not memberships: the legacy member table at
+     * src/EcclesiaCRM/APIControllers/PeopleGroupController.php:442-447 joins
+     * the person and drops anyone with a per_datedeactivated
+     * ("// GDRP, when a person is completely deactivated"), so a deactivated
+     * person is absent from the roster, not just from the count. Loading the
+     * unfiltered relation here would both leak those names and make
+     * members_count disagree with count(members) in the same payload.
+     *
      * @var array<int, string>
      */
-    public const API_RELATIONS = ['memberships.person'];
+    public const API_RELATIONS = ['activeMemberships.person'];
 
     /**
      * Companion to API_RELATIONS for the aggregate the resource reads via

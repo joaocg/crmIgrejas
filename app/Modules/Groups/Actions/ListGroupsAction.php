@@ -24,6 +24,16 @@ final class ListGroupsAction
      *
      * LIKE ? ESCAPE ? with LikeTermEscaper keeps a `%` or `_` typed into that
      * box a literal character instead of a wildcard.
+     *
+     * Deliberate omission: every legacy branch of
+     * src/EcclesiaCRM/APIControllers/PeopleGroupController.php:94-104 wraps
+     * the query in `filterByType(4, Criteria::NOT_EQUAL)` unless the
+     * `bEnabledSundaySchool` system config is on, i.e. Sunday School groups
+     * are hidden from the ordinary list. That is not ported: legacy type 4 is
+     * a numeric id into `list_lst`, whereas `groups.type` here is a free
+     * string, so there is no predicate to write. Restore the filter when
+     * group types become a real enum or lookup table AND the system-config
+     * equivalent of bEnabledSundaySchool exists.
      */
     public function execute(ListGroupsRequest $request): LengthAwarePaginator
     {

@@ -49,7 +49,7 @@ final class GroupResource extends JsonResource
             'is_active' => (bool) $this->is_active,
             'include_in_email_export' => (bool) $this->include_in_email_export,
             'members_count' => $this->whenCounted('members'),
-            'members' => $this->whenLoaded('memberships', fn (): array => $this->memberships
+            'members' => $this->whenLoaded('activeMemberships', fn (): array => $this->activeMemberships
                 ->map(fn ($membership): array => [
                     'id' => $membership->id,
                     'person_id' => $membership->person_id,

@@ -115,6 +115,39 @@ class GroupsPaginationTest extends TestCase
             ->assertJsonPath('data.1.members_count', 0);
     }
 
+    /**
+     * The roster drops deactivated people too, not just the count — the
+     * legacy member table at PeopleGroupController.php:442-447 filters on
+     * per_datedeactivated before listing. members_count must equal
+     * count(members) in the same payload.
+     */
+    public function test_the_member_roster_excludes_deactivated_people(): void
+    {
+        $this->actingAsTenantUser();
+
+        $group = Group::create(['name' => 'Adoracao']);
+
+        $active = Person::create(['first_name' => 'Joao', 'last_name' => 'Coelho']);
+        $deactivated = Person::create([
+            'first_name' => 'Maria',
+            'last_name' => 'Silva',
+            'deactivated_at' => '2020-01-01 00:00:00',
+        ]);
+
+        $group->memberships()->create(['person_id' => $active->id]);
+        $group->memberships()->create(['person_id' => $deactivated->id]);
+
+        $this->getJson('/api/groups')
+            ->assertOk()
+            ->assertJsonCount(1, 'data.0.members')
+            ->assertJsonPath('data.0.members.0.person.first_name', 'Joao');
+
+        $this->getJson("/api/groups/{$group->id}")
+            ->assertOk()
+            ->assertJsonCount(1, 'data.members')
+            ->assertJsonPath('data.members_count', 1);
+    }
+
     public function test_the_member_count_excludes_deactivated_people(): void
     {
         $this->actingAsTenantUser();

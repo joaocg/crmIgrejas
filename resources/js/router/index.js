@@ -154,7 +154,7 @@ const router = createRouter({
             component: () => import('../pages/modules/groups/GroupListPage.vue'),
             meta: {
                 requiresAuth: true,
-                ability: 'navigation.groups',
+                ability: 'groups.view_all',
             },
         },
         {
@@ -163,7 +163,7 @@ const router = createRouter({
             component: () => import('../pages/modules/groups/GroupCreatePage.vue'),
             meta: {
                 requiresAuth: true,
-                ability: 'navigation.groups',
+                ability: 'groups.view_all',
             },
         },
         {
@@ -172,7 +172,7 @@ const router = createRouter({
             component: () => import('../pages/modules/groups/GroupEditPage.vue'),
             meta: {
                 requiresAuth: true,
-                ability: 'navigation.groups',
+                ability: 'groups.view_all',
             },
         },
         {
@@ -181,7 +181,7 @@ const router = createRouter({
             component: () => import('../pages/modules/groups/GroupShowPage.vue'),
             meta: {
                 requiresAuth: true,
-                ability: 'navigation.groups',
+                ability: 'groups.view_all',
             },
         },
         {

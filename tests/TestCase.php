@@ -58,9 +58,16 @@ abstract class TestCase extends BaseTestCase
      * feature tests still declare their own `private function createTenant()`,
      * and PHP forbids a subclass from narrowing an inherited protected method
      * to private.
+     *
+     * The default slug is sequenced because `tenants.slug` is unique and
+     * actingAsTenantUser() mints a fresh tenant per call: two default calls in
+     * one test would otherwise collide. Pass an explicit slug when the test
+     * asserts on it.
      */
-    protected function makeTenant(string $slug = 'default'): Tenant
+    protected function makeTenant(?string $slug = null): Tenant
     {
+        $slug ??= 'tenant-'.(++$this->tenantUserSequence);
+
         $tenant = new Tenant;
         $tenant->slug = $slug;
         $tenant->name = ucfirst($slug).' Church';

@@ -72,6 +72,12 @@ class NavigationTest extends TestCase
             'permissions' => [
                 'navigation.people' => true,
                 'navigation.groups' => true,
+                // Groups is the one module whose menu entry needs a second
+                // ability: GroupPolicy::VIEW_ALL_ABILITY ports the
+                // `isAdmin() || isManageGroups()` branch of the legacy list
+                // endpoint, so navigation.groups alone would render a menu
+                // item leading to a 403. See the assertion below.
+                'groups.view_all' => true,
             ],
             'is_system' => false,
             'active' => true,
@@ -96,5 +102,18 @@ class NavigationTest extends TestCase
         $response->assertJsonPath('sections.0.items.0.key', 'dashboard');
         $response->assertJsonPath('sections.0.items.1.key', 'people');
         $response->assertJsonPath('sections.0.items.2.key', 'groups');
+    }
+
+    public function test_the_groups_menu_entry_needs_the_view_all_ability(): void
+    {
+        $this->actingAsTenantUser([
+            'navigation.people' => true,
+            'navigation.groups' => true,
+        ]);
+
+        $this->getJson('/api/navigation')
+            ->assertOk()
+            ->assertJsonMissing(['key' => 'groups'])
+            ->assertJsonPath('sections.0.items.1.key', 'people');
     }
 }

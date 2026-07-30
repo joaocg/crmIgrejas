@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Policies\GroupPolicy;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,7 @@ final class NavigationController extends Controller
                     ['key' => 'users', 'route' => '/users', 'labelKey' => 'navigation.users', 'icon' => '◫', 'meta' => 'CRUD', 'ability' => 'navigation.users'],
                     ['key' => 'people', 'route' => '/people', 'labelKey' => 'navigation.people', 'icon' => '◉', 'meta' => 'CRUD', 'ability' => 'navigation.people'],
                     ['key' => 'families', 'route' => '/families', 'labelKey' => 'navigation.families', 'icon' => '◔', 'meta' => 'CRUD', 'ability' => 'navigation.families'],
-                    ['key' => 'groups', 'route' => '/groups', 'labelKey' => 'navigation.groups', 'icon' => '◑', 'meta' => 'CRUD', 'ability' => 'navigation.groups'],
+                    ['key' => 'groups', 'route' => '/groups', 'labelKey' => 'navigation.groups', 'icon' => '◑', 'meta' => 'CRUD', 'ability' => GroupPolicy::VIEW_ALL_ABILITY],
                     ['key' => 'events', 'route' => '/events', 'labelKey' => 'navigation.events', 'icon' => '◒', 'meta' => 'CRUD', 'ability' => 'navigation.events'],
                 ],
             ],

@@ -6,6 +6,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Support\Authorization\ModulePolicy;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Legacy flags, per endpoint:
@@ -70,6 +71,20 @@ final class GroupPolicy extends ModulePolicy
     public function viewAny(User $user): bool
     {
         return parent::viewAny($user) && $this->allows($user, self::VIEW_ALL_ABILITY);
+    }
+
+    /**
+     * Same gate as viewAny. PeopleGroupController.php:405 guards the single
+     * group with isGroupManagerEnabledForId() = `isManageGroups() || a manager
+     * row for this group`; the portable disjunct is the first one, which is
+     * what VIEW_ALL_ABILITY names. Leaving show on the plain navigation gate
+     * would make the list restriction bypassable by walking ids — and with
+     * `members` embedded, that hands over the roster the legacy gated at
+     * PeopleGroupController.php:432-439.
+     */
+    public function view(User $user, Model $model): bool
+    {
+        return parent::view($user, $model) && $this->allows($user, self::VIEW_ALL_ABILITY);
     }
 
     protected function abilityPrefix(): string
