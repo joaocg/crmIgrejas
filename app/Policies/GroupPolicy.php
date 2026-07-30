@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Models\User;
 use App\Support\Authorization\ModulePolicy;
 
 /**
@@ -39,21 +40,38 @@ use App\Support\Authorization\ModulePolicy;
  * disjunct — as a `before()`/override on update and view — once users gain a
  * person_id.
  *
- * Deliberate divergence — viewAny. PeopleGroupController.php:90-105 lets any
- * authenticated user call the list and returns
- * `GroupQuery::create()->findById($ids)` with `$ids =
- * getGroupManagerIds()` (User.php:577-588) for anybody who is not
- * admin/manageGroups. That row narrowing needs the same missing person link,
- * so viewAny falls back to ModulePolicy's `navigation.groups` gate — the same
- * gate People and Families use — and returns every group in the tenant to
- * whoever passes it. This is the one place the port is *less* restrictive than
- * the legacy for a non-manager who nonetheless holds `navigation.groups`;
- * flagged for the controller rather than silently narrowing the list to zero
- * rows, which would leave the screen unusable for exactly the users the legacy
- * served.
+ * Deliberate divergence — viewAny. PeopleGroupController.php:90-105 branches:
+ * `isAdmin() || isManageGroups()` gets every group, and everyone else gets
+ * `GroupQuery::create()->findById(getGroupManagerIds())` (User.php:577-588),
+ * i.e. only the groups they personally manage. Just one of those two branches
+ * is computable here: the row narrowing needs the person link the new `users`
+ * table does not have.
+ *
+ * So viewAny ports the first branch literally — `groups.view_all` is the new
+ * name for `isAdmin() || isManageGroups()` — and a user without it gets a 403
+ * where the legacy would have shown them a narrowed list. That is the
+ * restrictive direction, chosen deliberately: returning every group in the
+ * tenant to anyone holding `navigation.groups` would show non-managers groups
+ * the legacy hid from them, and a permission that has been loosened in
+ * production cannot be tightened again without breaking someone. Granting
+ * `groups.view_all` is an admin's one-line decision in the meantime.
+ *
+ * When users gain a person_id, replace the 403 with the narrowed query rather
+ * than widening this gate.
  */
 final class GroupPolicy extends ModulePolicy
 {
+    /**
+     * The new name for the legacy `isAdmin() || isManageGroups()` branch of
+     * PeopleGroupController::getAllGroups().
+     */
+    public const VIEW_ALL_ABILITY = 'groups.view_all';
+
+    public function viewAny(User $user): bool
+    {
+        return parent::viewAny($user) && $this->allows($user, self::VIEW_ALL_ABILITY);
+    }
+
     protected function abilityPrefix(): string
     {
         return 'groups';

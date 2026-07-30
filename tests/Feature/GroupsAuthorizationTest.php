@@ -21,6 +21,27 @@ class GroupsAuthorizationTest extends TestCase
         $this->getJson('/api/groups')->assertForbidden();
     }
 
+    public function test_listing_requires_the_view_all_ability_on_top_of_navigation(): void
+    {
+        $this->actingAsTenantUser(['navigation.groups' => true]);
+
+        $this->getJson('/api/groups')->assertForbidden();
+    }
+
+    public function test_listing_is_allowed_with_the_view_all_ability(): void
+    {
+        $this->actingAsTenantUser([
+            'navigation.groups' => true,
+            'groups.view_all' => true,
+        ]);
+
+        Group::create(['name' => 'Intercessao']);
+
+        $this->getJson('/api/groups')
+            ->assertOk()
+            ->assertJsonPath('data.0.name', 'Intercessao');
+    }
+
     public function test_creating_requires_the_create_ability(): void
     {
         $this->actingAsTenantUser(['navigation.groups' => true]);
