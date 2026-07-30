@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use App\Models\Family;
@@ -73,9 +75,55 @@ class FamiliesModuleTest extends TestCase
             ->assertJsonPath('data.contacts.0.value', '(85) 98888-0000');
     }
 
+    public function test_update_accepts_a_partial_payload_and_rejects_an_invalid_present_field(): void
+    {
+        $tenant = $this->createTenant('default');
+        $user = $this->createUser($tenant->id);
+
+        $family = Family::create([
+            'tenant_id' => $tenant->id,
+            'name' => 'Coelho',
+            'wedding_date' => '2010-05-01',
+        ]);
+
+        $this->actingAs($user, 'sanctum')
+            ->patchJson("/api/families/{$family->id}", ['name' => 'Coelho Silva'])
+            ->assertOk()
+            ->assertJsonPath('data.name', 'Coelho Silva')
+            ->assertJsonPath('data.wedding_date', '2010-05-01');
+
+        // wedding_date is nullable on update, name is not.
+        $this->actingAs($user, 'sanctum')
+            ->patchJson("/api/families/{$family->id}", ['wedding_date' => null])
+            ->assertOk()
+            ->assertJsonPath('data.wedding_date', null);
+
+        $this->actingAs($user, 'sanctum')
+            ->patchJson("/api/families/{$family->id}", ['name' => null])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('name');
+    }
+
+    public function test_destroy_removes_the_family(): void
+    {
+        $tenant = $this->createTenant('default');
+        $user = $this->createUser($tenant->id);
+
+        $family = Family::create([
+            'tenant_id' => $tenant->id,
+            'name' => 'Coelho',
+        ]);
+
+        $this->actingAs($user, 'sanctum')
+            ->deleteJson("/api/families/{$family->id}")
+            ->assertNoContent();
+
+        $this->assertDatabaseMissing('families', ['id' => $family->id]);
+    }
+
     private function createTenant(string $slug): Tenant
     {
-        $tenant = new Tenant();
+        $tenant = new Tenant;
         $tenant->slug = $slug;
         $tenant->name = ucfirst($slug).' Church';
         $tenant->locale = 'pt_BR';

@@ -97,9 +97,38 @@ class PeoplePaginationTest extends TestCase
             ->assertJsonValidationErrors('per_page');
     }
 
-    private function authenticate(): User
+    public function test_timestamp_sorting_requires_the_private_data_ability(): void
     {
-        $tenant = new Tenant();
+        $this->authenticate(['navigation.people' => true]);
+
+        $this->getJson('/api/people?sort=created_at')
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('sort');
+
+        $this->getJson('/api/people?sort=-updated_at')
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('sort');
+    }
+
+    public function test_timestamp_sorting_is_allowed_with_the_private_data_ability(): void
+    {
+        $this->authenticate([
+            'navigation.people' => true,
+            'people.private_data.view' => true,
+        ]);
+
+        Person::create(['first_name' => 'Joao', 'last_name' => 'Coelho']);
+
+        $this->getJson('/api/people?sort=created_at')->assertOk();
+        $this->getJson('/api/people?sort=-updated_at')->assertOk();
+    }
+
+    /**
+     * @param  array<string, bool>  $permissions
+     */
+    private function authenticate(array $permissions = ['*' => true]): User
+    {
+        $tenant = new Tenant;
         $tenant->slug = 'default';
         $tenant->name = 'Default Church';
         $tenant->locale = 'pt_BR';
@@ -111,7 +140,7 @@ class PeoplePaginationTest extends TestCase
             'tenant_id' => $tenant->id,
             'slug' => 'admin',
             'name' => 'Admin',
-            'permissions' => ['*' => true],
+            'permissions' => $permissions,
             'is_system' => false,
             'active' => true,
         ]);

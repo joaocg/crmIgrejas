@@ -80,7 +80,10 @@ class FamiliesPrivacyTest extends TestCase
 
     public function test_store_rejects_an_invalid_payload(): void
     {
-        $this->familyForUserWithPermissions(['navigation.families' => true]);
+        $this->familyForUserWithPermissions([
+            'navigation.families' => true,
+            'families.create' => true,
+        ]);
 
         $this->postJson('/api/families', ['wedding_date' => 'not-a-date'])
             ->assertStatus(422)
@@ -115,7 +118,7 @@ class FamiliesPrivacyTest extends TestCase
      */
     private function familyForUserWithPermissions(array $permissions): Family
     {
-        $tenant = new Tenant();
+        $tenant = new Tenant;
         $tenant->slug = 'default';
         $tenant->name = 'Default Church';
         $tenant->locale = 'pt_BR';

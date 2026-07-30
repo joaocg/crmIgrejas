@@ -19,6 +19,14 @@ final class FamilyResource extends JsonResource
      * legacy private fields (email, home_phone, work_phone, mobile_phone)
      * are masked here, mirroring PersonResource::PRIVATE_DATA_ABILITY.
      *
+     * Deliberate divergence: familyview.php:26 is
+     * `$can_see_privatedata = ($iCurrentUserFamID == $iFamilyID || ...)`, so
+     * the legacy also lets a user see their OWN family's private data without
+     * the permission. Only the second disjunct is ported — the new `users`
+     * table has no family_id/person_id, so there is nothing to compare
+     * against yet. The divergence is more restrictive, not less. Restore the
+     * self-access branch when users gain a person link.
+     *
      * `contacts` carries the same phone/email values in normalized form
      * (LegacyDataImporter::syncContact writes both representations from the
      * same legacy columns), so it is masked by the same gate — otherwise the

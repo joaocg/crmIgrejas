@@ -92,11 +92,30 @@ class FamiliesPaginationTest extends TestCase
             ->assertJsonValidationErrors('per_page');
     }
 
-    public function test_creating_requires_the_create_ability(): void
+    public function test_timestamp_sorting_requires_the_private_data_ability(): void
     {
         $this->authenticate(['navigation.families' => true]);
 
-        $this->postJson('/api/families', ['name' => 'Nova'])->assertForbidden();
+        $this->getJson('/api/families?sort=created_at')
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('sort');
+
+        $this->getJson('/api/families?sort=-updated_at')
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('sort');
+    }
+
+    public function test_timestamp_sorting_is_allowed_with_the_private_data_ability(): void
+    {
+        $this->authenticate([
+            'navigation.families' => true,
+            'families.private_data.view' => true,
+        ]);
+
+        Family::create(['name' => 'Alves']);
+
+        $this->getJson('/api/families?sort=created_at')->assertOk();
+        $this->getJson('/api/families?sort=-updated_at')->assertOk();
     }
 
     /**
@@ -104,7 +123,7 @@ class FamiliesPaginationTest extends TestCase
      */
     private function authenticate(array $permissions = ['*' => true]): User
     {
-        $tenant = new Tenant();
+        $tenant = new Tenant;
         $tenant->slug = 'default';
         $tenant->name = 'Default Church';
         $tenant->locale = 'pt_BR';
