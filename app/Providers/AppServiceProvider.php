@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\Family;
+use App\Models\Group;
 use App\Models\Person;
 use App\Policies\FamilyPolicy;
+use App\Policies\GroupPolicy;
 use App\Policies\PersonPolicy;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Support\Facades\Gate;
@@ -29,5 +31,6 @@ final class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(Person::class, PersonPolicy::class);
         Gate::policy(Family::class, FamilyPolicy::class);
+        Gate::policy(Group::class, GroupPolicy::class);
     }
 }

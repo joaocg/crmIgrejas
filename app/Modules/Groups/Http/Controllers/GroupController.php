@@ -9,76 +9,66 @@ use App\Modules\Groups\Actions\CreateGroupAction;
 use App\Modules\Groups\Actions\DeleteGroupAction;
 use App\Modules\Groups\Actions\ListGroupsAction;
 use App\Modules\Groups\Actions\UpdateGroupAction;
+use App\Modules\Groups\Http\Requests\ListGroupsRequest;
+use App\Modules\Groups\Http\Requests\StoreGroupRequest;
+use App\Modules\Groups\Http\Requests\UpdateGroupRequest;
+use App\Modules\Groups\Http\Resources\GroupResource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Gate;
 
 final class GroupController
 {
-    public function index(Request $request, ListGroupsAction $action): JsonResponse
+    public function index(ListGroupsRequest $request, ListGroupsAction $action): AnonymousResourceCollection
     {
-        return response()->json($action->execute((int) $request->user()->tenant_id));
+        Gate::authorize('viewAny', Group::class);
+
+        return GroupResource::collection($action->execute($request));
     }
 
-    public function store(Request $request, CreateGroupAction $action): JsonResponse
+    public function store(StoreGroupRequest $request, CreateGroupAction $action): GroupResource
     {
-        $validated = $request->validate([
-            'role_id' => [
-                'nullable',
-                'integer',
-                Rule::exists('roles', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
-            ],
-            'type' => ['nullable', 'string', 'max:50'],
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'has_special_properties' => ['nullable', 'boolean'],
-            'is_active' => ['nullable', 'boolean'],
-            'include_in_email_export' => ['nullable', 'boolean'],
-        ]);
+        Gate::authorize('create', Group::class);
 
-        return response()->json($action->execute((int) $request->user()->tenant_id, $validated), 201);
+        $group = $action->execute($request->validated());
+
+        return GroupResource::make($this->hydrate($group));
     }
 
-    public function show(Request $request, Group $group): JsonResponse
+    public function show(Group $group): GroupResource
     {
-        $this->authorizeTenantAccess($request, $group);
+        Gate::authorize('view', $group);
 
-        return response()->json($group->load(['memberships.person']));
+        return GroupResource::make($this->hydrate($group));
     }
 
-    public function update(Request $request, Group $group, UpdateGroupAction $action): JsonResponse
+    public function update(UpdateGroupRequest $request, Group $group, UpdateGroupAction $action): GroupResource
     {
-        $this->authorizeTenantAccess($request, $group);
+        Gate::authorize('update', $group);
 
-        $validated = $request->validate([
-            'role_id' => [
-                'sometimes',
-                'nullable',
-                'integer',
-                Rule::exists('roles', 'id')->where(fn ($query) => $query->where('tenant_id', $request->user()->tenant_id)),
-            ],
-            'type' => ['sometimes', 'nullable', 'string', 'max:50'],
-            'name' => ['sometimes', 'string', 'max:255'],
-            'description' => ['sometimes', 'nullable', 'string'],
-            'has_special_properties' => ['sometimes', 'boolean'],
-            'is_active' => ['sometimes', 'boolean'],
-            'include_in_email_export' => ['sometimes', 'boolean'],
-        ]);
+        $group = $action->execute($group, $request->validated());
 
-        return response()->json($action->execute($group, $validated));
+        return GroupResource::make($this->hydrate($group));
     }
 
-    public function destroy(Request $request, Group $group, DeleteGroupAction $action): JsonResponse
+    public function destroy(Group $group, DeleteGroupAction $action): JsonResponse
     {
-        $this->authorizeTenantAccess($request, $group);
+        Gate::authorize('delete', $group);
 
         $action->execute($group);
 
         return response()->json([], 204);
     }
 
-    private function authorizeTenantAccess(Request $request, Group $group): void
+    /**
+     * GroupResource reads `members` through whenLoaded() and `members_count`
+     * through whenCounted(); both return MissingValue — and are stripped from
+     * the JSON entirely, key and all — when the relation/aggregate is absent.
+     * Every single-model endpoint therefore hydrates exactly the same set the
+     * list query does.
+     */
+    private function hydrate(Group $group): Group
     {
-        abort_unless((int) $group->tenant_id === (int) $request->user()->tenant_id, 404);
+        return $group->load(Group::API_RELATIONS)->loadCount(Group::API_COUNTS);
     }
 }
