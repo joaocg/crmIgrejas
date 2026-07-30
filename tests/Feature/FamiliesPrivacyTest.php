@@ -6,9 +6,6 @@ namespace Tests\Feature;
 
 use App\Models\Address;
 use App\Models\Family;
-use App\Models\Role;
-use App\Models\Tenant;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -118,35 +115,9 @@ class FamiliesPrivacyTest extends TestCase
      */
     private function familyForUserWithPermissions(array $permissions): Family
     {
-        $tenant = new Tenant;
-        $tenant->slug = 'default';
-        $tenant->name = 'Default Church';
-        $tenant->locale = 'pt_BR';
-        $tenant->timezone = 'America/Fortaleza';
-        $tenant->active = true;
-        $tenant->save();
-
-        $role = Role::create([
-            'tenant_id' => $tenant->id,
-            'slug' => 'operator',
-            'name' => 'Operator',
-            'permissions' => $permissions,
-            'is_system' => false,
-            'active' => true,
-        ]);
-
-        $user = User::factory()->create([
-            'tenant_id' => $tenant->id,
-            'role_id' => $role->id,
-            'email' => 'operator+'.uniqid().'@church.local',
-            'password' => 'password',
-            'active' => true,
-        ]);
-
-        $this->actingAs($user, 'sanctum');
+        $this->actingAsTenantUser($permissions);
 
         $address = Address::create([
-            'tenant_id' => $tenant->id,
             'line1' => 'Rua Um, 100',
             'city' => 'Fortaleza',
         ]);

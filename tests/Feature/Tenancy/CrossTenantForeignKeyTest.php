@@ -6,9 +6,6 @@ namespace Tests\Feature\Tenancy;
 
 use App\Models\Address;
 use App\Models\Family;
-use App\Models\Role;
-use App\Models\Tenant;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -25,15 +22,15 @@ class CrossTenantForeignKeyTest extends TestCase
 
     public function test_person_cannot_be_attached_to_another_tenants_family(): void
     {
-        $tenant = $this->createTenant('default');
-        $otherTenant = $this->createTenant('other');
+        $tenant = $this->makeTenant('default');
+        $otherTenant = $this->makeTenant('other');
 
         $otherFamily = Family::withoutGlobalScopes()->create([
             'tenant_id' => $otherTenant->id,
             'name' => 'Other Family',
         ]);
 
-        $this->actingAs($this->createUser($tenant->id), 'sanctum');
+        $this->actingAsTenantUser(tenant: $tenant);
 
         $this->postJson('/api/people', [
             'first_name' => 'Joao',
@@ -46,8 +43,8 @@ class CrossTenantForeignKeyTest extends TestCase
 
     public function test_family_cannot_be_attached_to_another_tenants_address(): void
     {
-        $tenant = $this->createTenant('default');
-        $otherTenant = $this->createTenant('other');
+        $tenant = $this->makeTenant('default');
+        $otherTenant = $this->makeTenant('other');
 
         $otherAddress = Address::withoutGlobalScopes()->create([
             'tenant_id' => $otherTenant->id,
@@ -55,7 +52,7 @@ class CrossTenantForeignKeyTest extends TestCase
             'city' => 'Recife',
         ]);
 
-        $this->actingAs($this->createUser($tenant->id), 'sanctum');
+        $this->actingAsTenantUser(tenant: $tenant);
 
         $this->postJson('/api/families', [
             'name' => 'Coelho',
@@ -67,9 +64,9 @@ class CrossTenantForeignKeyTest extends TestCase
 
     public function test_own_tenant_foreign_keys_are_still_accepted(): void
     {
-        $tenant = $this->createTenant('default');
+        $tenant = $this->makeTenant('default');
 
-        $this->actingAs($this->createUser($tenant->id), 'sanctum');
+        $this->actingAsTenantUser(tenant: $tenant);
 
         $address = Address::create([
             'line1' => 'Rua Um, 100',
@@ -80,38 +77,5 @@ class CrossTenantForeignKeyTest extends TestCase
             'name' => 'Coelho',
             'address_id' => $address->id,
         ])->assertCreated();
-    }
-
-    private function createTenant(string $slug): Tenant
-    {
-        $tenant = new Tenant;
-        $tenant->slug = $slug;
-        $tenant->name = ucfirst($slug).' Church';
-        $tenant->locale = 'pt_BR';
-        $tenant->timezone = 'America/Fortaleza';
-        $tenant->active = true;
-        $tenant->save();
-
-        return $tenant;
-    }
-
-    private function createUser(int $tenantId): User
-    {
-        $role = Role::create([
-            'tenant_id' => $tenantId,
-            'slug' => 'admin',
-            'name' => 'Admin',
-            'permissions' => ['*' => true],
-            'is_system' => false,
-            'active' => true,
-        ]);
-
-        return User::factory()->create([
-            'tenant_id' => $tenantId,
-            'role_id' => $role->id,
-            'email' => 'admin+'.uniqid().'@church.local',
-            'password' => 'password',
-            'active' => true,
-        ]);
     }
 }
